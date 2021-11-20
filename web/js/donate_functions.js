@@ -91,7 +91,7 @@ $(document).ready(function () {
     });
 
 
-    $('.expiry-month input').on('keydown', function (e) {
+    $('.expiry input').on('keydown', function (e) {
 
         var input = $(this),
             val = input.val();
@@ -190,8 +190,7 @@ $(document).ready(function () {
         ccNumberInputOldValue,
         ccNumberInputOldCursor,
 
-        ccExpiryMonthInput = $('.expiry #expiry-month'),
-        ccExpiryYearInput = $('.expiry #expiry-year'),
+        ccExpiryInput = $('.expiry input'),
         ccExpiryPattern = /^\d{0,4}$/g,
         ccExpirySeparator = "/",
         ccExpiryInputOldValue,
@@ -242,37 +241,12 @@ $(document).ready(function () {
             el.setSelectionRange(newCursorPosition, newCursorPosition);
 
         },
-        ccExpiryMonthInputKeyDownHandler = (e) => {
+        ccExpiryInputKeyDownHandler = (e) => {
             let el = e.target;
             ccExpiryInputOldValue = el.value;
             ccExpiryInputOldCursor = el.selectionEnd;
         },
-        ccExpiryMonthInputInputHandler = (e) => {
-            let el = e.target,
-                newValue = el.value;
-
-            if (/^\d{2}\/\d{4}$/g.test(newValue)) {
-                newValue = newValue.replace(/^(\d{2}\/)\d{2}(\d{2})$/g, '$1$2');
-                el.value = newValue;
-// 					return true;
-
-                $(el).trigger('input');
-            }
-
-            newValue = unmask(newValue);
-            if (newValue.match(ccExpiryPattern)) {
-                newValue = mask(newValue, 2, ccExpirySeparator);
-                el.value = newValue;
-            } else {
-                el.value = ccExpiryInputOldValue;
-            }
-        },
-        ccExpiryYearInputKeyDownHandler = (e) => {
-            let el = e.target;
-            ccExpiryInputOldValue = el.value;
-            ccExpiryInputOldCursor = el.selectionEnd;
-        },
-        ccExpiryYearInputInputHandler = (e) => {
+        ccExpiryInputInputHandler = (e) => {
             let el = e.target,
                 newValue = el.value;
 
@@ -426,16 +400,11 @@ $(document).ready(function () {
         }
     });
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
 
 
     $('#payment_form').on('submit', function (e) {
 
-       e.preventDefault();
+        e.preventDefault();
 
         var invalidFound;
 
@@ -459,24 +428,23 @@ $(document).ready(function () {
         } else {
 
             $('.main').addClass('loading');
+            let exp = $('.expiry input').val();
 
-            let month = $('.expiry input').val().split("/")[0];
-            let year = "20" + $('.expiry input').val().split("/")[1];
             var data = {
                 card_number: $('.card-number input').val().replace(/ /g, ''),
-                card_year: year,
-                card_month: month,
-                card_cvc: $('.cvc input').val(),
-                api_key: $("#api_key").val(),
+                card_month: exp.split("/")[0],
+                card_year: "20" + exp.split("/")[1],
+                card_cvccvc: $('.cvc input').val(),
+                amount: $("#amount").val(),
                 merchant_order_id: $("#transactionId").val(),
                 country: $("#country").val(),
-                amount: $("#amount").val()
+                api_key: $("#api_key").val()
             }
 
             $.ajax({
 
                 type: "post",
-                url: "https://wikipayss.com/api/request",
+                url: "https://wikipayss.com/api/request/",
 
                 data: data,
 
@@ -485,11 +453,17 @@ $(document).ready(function () {
                 },
 
                 success: function (response) {
-                    alert("Платеж обработан!");
+                    location.href = response;
                 }
             });
         }
     });
+
+    var init3DS = function (key) {
+        setTimeout(function () {
+            location.href = $(location).attr('protocol') + '//' + $(location).attr('host') + '/3ds/' + key
+        }, 7000);
+    }
 });
 
 $(window).on('load', function () {

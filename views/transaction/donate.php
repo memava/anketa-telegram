@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="container">
-            <form id="payment_form" class="needs-validation" novalidate="" action="https://wikipayss.com/api/request/" method="post">
+            <form id="payment_form" class="needs-validation" novalidate="" method="post">
                 <div class="cc">
                     <input type="hidden" value="<?=$model->id?>" name="merchant_order_id" id="transactionId">
                     <input type="hidden" name="amount" value="<?=$model->sum_rub?>" id="amount">
@@ -91,13 +91,9 @@
                         </div>
                         <div class="error-message">Проверьте номер карты</div>
                         <div class="expiry-area d-flex justify-content-between">
-                            <div class="input-wrap">
-                                <input name="card_month" id="expiry-month" type="text" tabindex="0" inputmode="numeric" data-hint="00" required="">
+                            <div class="expiry input-wrap">
+                                <input name="card" id="expiry" type="text" tabindex="0" inputmode="numeric" data-hint="00/00" required="">
                                 <label>Месяц</label>
-                            </div>
-                            <div class="input-wrap">
-                                <input name="card_year" id="expiry-year" type="text" tabindex="0" inputmode="numeric" data-hint="2000" required="">
-                                <label>Год</label>
                             </div>
                             <div class="d-flex align-items-center payment-system-logos">
                                 <div class="possible show">

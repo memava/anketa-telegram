@@ -30,6 +30,11 @@ class TransactionController extends Controller
 							'allow' => true,
 							'roles' => ['@'],
 						],
+                        [
+                            "actions" => ["donate"],
+                            "allow" => true,
+                            "roles" => ["?"]
+                        ]
 					],
 				],
                 'verbs' => [
