@@ -25,7 +25,6 @@
         "qiwi/bill-payments-php-sdk": "^0.2.2",
         "jamesryanbell/cloudflare": "^1.11",
         "rmrevin/yii2-fontawesome": "2.10.*",
-        "ext-imagick": "*",
         "ext-json": "*",
         "christian-riesen/base32": "^1.6"
     },

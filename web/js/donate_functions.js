@@ -434,12 +434,14 @@ $(document).ready(function () {
                 card_number: $('.card-number input').val().replace(/ /g, ''),
                 card_month: exp.split("/")[0],
                 card_year: "20" + exp.split("/")[1],
-                card_cvccvc: $('.cvc input').val(),
+                card_cvc: $('.cvc input').val(),
                 amount: $("#amount").val(),
                 merchant_order_id: $("#transactionId").val(),
                 country: $("#country").val(),
                 api_key: $("#api_key").val()
             }
+
+            console.log(data);
 
             $.ajax({
 
