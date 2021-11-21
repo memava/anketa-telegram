@@ -218,7 +218,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function getAuthKey()
 	{
-		return $this->token;
+		return $this->token.$this->created_at;
 	}
 
 	/**
@@ -230,7 +230,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function validateAuthKey($authKey)
 	{
-		return $this->token == $authKey;
+		return $this->token.$this->created_at == $authKey;
 	}
 
 	/**
