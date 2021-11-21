@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Message;
 use app\models\User;
 use app\models\UserSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -123,6 +125,23 @@ class UserController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @return string|\yii\web\Response
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function actionMessage()
+    {
+        $model = new Message();
+        if($model->load(\Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, "image");
+            if($model->upload() && $model->send()) {
+                \Yii::$app->session->setFlash("success", "Сообщения отправлены для $model->users пользователей");
+                return $this->refresh();
+            }
+        }
+        return $this->render('message', compact('model'));
     }
 
     /**
