@@ -50,6 +50,28 @@ class ApiController extends Controller
 	 * @param $id
 	 * @return bool|void
 	 */
+	public function actionWebmaster($id)
+	{
+		$bot = Bot::findOne($id);
+		$bot_api_key  = $bot->token;
+		$bot_username = $bot->bot_name;
+
+		try {
+			$telegram = new Telegram($bot_api_key, $bot_username);
+			$telegram->addCommandsPath(\Yii::getAlias("@app/TelegramWebCommands"));
+
+			$telegram->handle();
+			\Yii::$app->response->setStatusCode(200);
+			return true;
+		} catch (TelegramException $e) {
+			 echo $e->getMessage();
+		}
+	}
+
+	/**
+	 * @param $id
+	 * @return bool|void
+	 */
 	public function actionPayment($id)
 	{
 		if($id == Bot::PAYMENT_QIWI) {

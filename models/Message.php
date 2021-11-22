@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Yii;
@@ -80,12 +81,16 @@ class Message extends \yii\base\Model
     {
         foreach ($this->getUsers() as $user) {
             $tg = new Telegram($user->bot->token, $user->bot->bot_name);
-            if($this->image) {
-                Request::sendPhoto(["chat_id" => $user->token, "caption" => $this->message, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image), "reply_markup" => Keyboard::getMainKeyboard()]);
-            } else {
-                $user->sendMessage($this->message, Keyboard::getMainKeyboard());
+            try {
+                if($this->image) {
+                    Request::sendPhoto(["chat_id" => $user->token, "caption" => $this->message, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image), "reply_markup" => Keyboard::getMainKeyboard()]);
+                } else {
+                    $user->sendMessage($this->message, Keyboard::getMainKeyboard());
+                }
+                $this->users++;
+            } catch (TelegramException $e) {
+
             }
-            $this->users++;
         }
         $this->deletePhoto();
         return true;
@@ -99,9 +104,13 @@ class Message extends \yii\base\Model
     {
         foreach ($this->getUsers() as $user) {
             $tg = new Telegram($user->bot->token, $user->bot->bot_name);
-            Request::sendPhoto(["chat_id" => $user->token, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image)]);
-            $user->sendMessage($this->message, Keyboard::getMainKeyboard());
-            $this->users++;
+            try {
+                Request::sendPhoto(["chat_id" => $user->token, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image)]);
+                $user->sendMessage($this->message, Keyboard::getMainKeyboard());
+                $this->users++;
+            } catch (TelegramException $e) {
+
+            }
         }
         $this->deletePhoto();
         return true;

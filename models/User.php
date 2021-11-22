@@ -50,6 +50,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
 	const ROLE_USER = 1;
 	const ROLE_ADMIN = 2;
+	const ROLE_WEB = 3;
 
 	const EVENT_USER_REGISTERED = "user_registered";
 	const EVENT_BALANCE_CHANGED = "balance_changed";
@@ -266,7 +267,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	{
 		if($this->isNewRecord) {
 			$this->generateRefLink();
-			$this->role = self::ROLE_USER;
+			$this->role = $this->role ?: self::ROLE_USER;
 		}
 		return parent::beforeSave($insert);
 	}

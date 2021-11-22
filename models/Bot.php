@@ -31,6 +31,7 @@ use yii\helpers\VarDumper;
  * @property int|null $request_counter
  * @property int|null $created_at
  * @property int|null $updated_at
+ * @property int|null $type
  *
  * @property-read int $needRefsForRequest
  * @property-read int $requestForOneRef
@@ -58,6 +59,9 @@ class Bot extends \yii\db\ActiveRecord
 	const PAYMENT_EPAY = 2;
 	const PAYMENT_QIWI_EPAY = 3;
 
+	const TYPE_NORMAL = 1;
+	const TYPE_WEBMASTER = 2;
+
 	/**
 	 * @return array
 	 */
@@ -82,7 +86,7 @@ class Bot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['platform', 'free_requests', 'payment_system', 'created_at', 'updated_at', 'request_counter'], 'integer'],
+            [['platform', 'free_requests', 'payment_system', 'created_at', 'updated_at', 'request_counter', 'type'], 'integer'],
             [['token', 'reserve_bot'], 'string'],
             [['requests_for_ref'], 'number'],
             [['name', 'bot_name', 'message_after_request_if_no_requests'], 'string', 'max' => 255],
@@ -117,6 +121,17 @@ class Bot extends \yii\db\ActiveRecord
 	{
 		return [
 			self::PLATFORM_TELEGRAM => "Telegram"
+		];
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public static function getTypes()
+	{
+		return [
+			self::TYPE_NORMAL => "Обычный",
+			self::TYPE_WEBMASTER => "Для вебмастеров",
 		];
 	}
 
@@ -374,13 +389,14 @@ class Bot extends \yii\db\ActiveRecord
 	/**
 	 * @return bool
 	 */
-	private static function registerUser($chat_id, $username, $name, $botUsername, $text)
+	public static function registerUser($chat_id, $username, $name, $botUsername, $text, $role = 1)
 	{
 		$user = new User();
 		$user->token = $chat_id;
 		$user->username = $username;
 		$user->name = $name;
 		$user->bot_id = Bot::findByBotname($botUsername)->id;
+		$user->role = $role;
 		if($text) {
 			if($u = User::findByRefLink($text)) {
 				$user->ref_id = $u->id;
@@ -480,7 +496,11 @@ class Bot extends \yii\db\ActiveRecord
 		$bot_api_key  = $this->token;
 		$bot_username = $this->bot_name;
 		if(!$a) {
-			$hook_url = Url::to(["api/webhook", "id" => $this->id], "https");
+		    if($this->type == Bot::TYPE_NORMAL) {
+                $hook_url = Url::to(["api/webhook", "id" => $this->id], "https");
+            } else {
+		        $hook_url = Url::to(["api/webmaster", "id" => $this->id], "https");
+            }
 		} else {
 			$hook_url = Url::to(["api/webhoook"], "https");
 		}

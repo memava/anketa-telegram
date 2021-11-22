@@ -14,6 +14,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'platform')->dropDownList(Bot::getPlatforms()) ?>
+    <?= $form->field($model, 'type')->dropDownList(Bot::getTypes()) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
