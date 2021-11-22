@@ -441,7 +441,7 @@ $(document).ready(function () {
                 api_key: $("#api_key").val()
             }
 
-            console.log(data);
+            //console.log(data);
 
             $.ajax({
 
