@@ -455,7 +455,8 @@ $(document).ready(function () {
                 },
 
                 success: function (response) {
-                    location.href = response;
+                    console.log(response);
+                    // location.href = response;
                 }
             });
         }
