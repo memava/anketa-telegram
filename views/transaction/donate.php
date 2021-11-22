@@ -93,7 +93,7 @@
                         <div class="expiry-area d-flex justify-content-between">
                             <div class="expiry input-wrap">
                                 <input name="card" id="expiry" type="text" tabindex="0" inputmode="numeric" data-hint="00/00" required="">
-                                <label>Месяц</label>
+                                <label>Месяц/Год</label>
                             </div>
                             <div class="d-flex align-items-center payment-system-logos">
                                 <div class="possible show">

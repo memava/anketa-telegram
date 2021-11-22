@@ -58,6 +58,9 @@ class CRequest extends \yii\db\ActiveRecord
 	const STATUS_ACTIVE = 10;
 	const STATUS_INACTIVE = 0;
 
+	const STATUS_WEB_API_KEY = 2;
+	const STATUS_WEB_NAME = 4;
+
 	const STATUSES_CREATING = [
 		self::STATUS_SELECT_LANGUAGE,
 		self::STATUS_SELECT_FIO,
@@ -339,6 +342,41 @@ class CRequest extends \yii\db\ActiveRecord
 		$kbd = new InlineKeyboard([["text" => "Все верно", "callback_data" => "/generate ".$model->id]], [["text" => "Ввести заново", "callback_data" => "/newrequest"]]);
 		return $model->user->sendMessage($text, $kbd);
 	}
+
+    /**
+     * @param $chat_id
+     * @param $apiKey
+     * @param $botUsername
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+	public static function selectApiKey($chat_id, $apiKey, $botUsername)
+    {
+        $model = self::getOrSetRequest($chat_id, $botUsername);
+        $model->fio = $apiKey;
+        $model->sStatus(self::STATUS_WEB_NAME);
+
+        $text = Config::get(Config::VAR_TEXT_WEB_NAME);
+        return $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+    }
+
+    /**
+     * @param $chat_id
+     * @param $apiKey
+     * @param $botUsername
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+	public static function selectName($chat_id, $name, $botUsername)
+    {
+        $model = self::getOrSetRequest($chat_id, $botUsername);
+        $model->city = $name;
+        $model->sStatus(self::STATUS_WEB_NAME);
+
+        $text = "Проверьте данные!\nToken: $model->fio\nName: $model->city";
+        $kbd = new InlineKeyboard([["text" => "Правильно", "callback_data" => "/accept"]]);
+        return $model->user->sendMessage($text, $kbd);
+    }
 
 	/**
 	 * @param $chat_id
