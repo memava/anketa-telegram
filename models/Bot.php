@@ -32,6 +32,7 @@ use yii\helpers\VarDumper;
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $type
+ * @property int|null $user_id
  *
  * @property-read int $needRefsForRequest
  * @property-read int $requestForOneRef
@@ -365,6 +366,54 @@ class Bot extends \yii\db\ActiveRecord
 		return Request::sendMessage($data);
 	}
 
+    /**
+     * @param $chat_id
+     * @param $username
+     * @param $name
+     * @param $botUsername
+     * @param $text
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws TelegramException
+     */
+	public static function newBot($chat_id, $username, $name, $botUsername, $text)
+    {
+        $model = CRequest::getOrSetRequest($chat_id, $botUsername);
+        $model->sStatus(CRequest::STATUS_WEB_API_KEY);
+
+        $text = Config::get(Config::VAR_TEXT_WEB_APIKEY);
+        return $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+    }
+
+    /**
+     * @param $chat_id
+     * @param $username
+     * @param $name
+     * @param $botUsername
+     * @param $text
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws TelegramException
+     */
+	public static function acceptNewBot($chat_id, $username, $name, $botUsername, $text)
+    {
+        $model = CRequest::getOrSetRequest($chat_id, $botUsername);
+        $model->sStatus(CRequest::STATUS_GENERATING);
+
+        $bot = new Bot();
+        $bot->token = $model->fio;
+        $bot->bot_name = $model->city;
+        $bot->name = $model->city;
+        $bot->platform = Bot::PLATFORM_TELEGRAM;
+        $bot->free_requests = $model->bot->free_requests;
+        $bot->requests_for_ref = $model->bot->requests_for_ref;
+        $bot->user_id = $model->user->token;
+        $bot->payment_system = $model->bot->payment_system;
+        $bot->type = self::TYPE_NORMAL;
+        $bot->save(false);
+
+        $text = Config::get(Config::VAR_TEXT_WEB_APIKEY);
+        return $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+    }
+
 	/**
 	 * @param $chat_id
 	 * @param $username
@@ -391,17 +440,21 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public static function registerUser($chat_id, $username, $name, $botUsername, $text, $role = 1)
 	{
+	    $bot = Bot::findByBotname($botUsername);
 		$user = new User();
 		$user->token = $chat_id;
 		$user->username = $username;
 		$user->name = $name;
-		$user->bot_id = Bot::findByBotname($botUsername)->id;
+		$user->bot_id = $bot->id;
 		$user->role = $role;
 		if($text) {
 			if($u = User::findByRefLink($text)) {
 				$user->ref_id = $u->id;
 			}
 		}
+		if($bot->user_id == $chat_id) {
+		    $user->role = User::ROLE_ADMIN;
+        }
 		return $user->save(false);
 	}
 

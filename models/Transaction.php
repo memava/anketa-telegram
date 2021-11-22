@@ -170,7 +170,6 @@ class Transaction extends \yii\db\ActiveRecord
 				'amount' => $this->sum,
 				'billId' => $this->id,
 				'currency' => $currency,
-				'successUrl' => 'https://test.ru',
 			];
 
 			Yii::$app->qiwi->key = Config::get(Config::VAR_QIWI_PRIVATE_KEY);

@@ -36,6 +36,10 @@ class Config extends \yii\db\ActiveRecord
 	const VAR_TEXT_NO_TEMPLATES = "text_no_templates";
 	const VAR_TEXT_AFTER_MAKE = "text_after_make";
 
+	const VAR_TEXT_WEB_START = "text_web_start";
+	const VAR_TEXT_WEB_APIKEY = "text_web_apikey";
+	const VAR_TEXT_WEB_NAME = "text_web_name";
+
 	const VAR_TEXT_RESERVE = "text_reserve";
 
 	const VAR_DEFAULT_BUTTONS = "default_buttons";
