@@ -103,6 +103,8 @@ class Message extends \yii\base\Model
     private function sendMessage()
     {
         foreach ($this->getUsers() as $user) {
+            if(!$user->bot) continue;
+
             $tg = new Telegram($user->bot->token, $user->bot->bot_name);
             try {
                 Request::sendPhoto(["chat_id" => $user->token, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image)]);
@@ -129,7 +131,7 @@ class Message extends \yii\base\Model
      */
     private function getUsers()
     {
-        if($this->bot == 0) return User::find()->with('bot')->all();
+        if($this->bot == 0) return User::find()->all();
         return User::find()->where(["bot_id" => $this->bot])->all();
     }
 }
