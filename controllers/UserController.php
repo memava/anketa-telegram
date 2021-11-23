@@ -131,16 +131,19 @@ class UserController extends Controller
      * @return string|\yii\web\Response
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function actionMessage($offset = 0, $limit = 500)
+    public function actionMessage()
     {
         $model = new Message();
-        $model->offset = $offset;
-        $model->limit = $limit;
+        if(!$model->load(\Yii::$app->request->get())) {
+            $model->limit = 500;
+            $model->offset = 0;
+        }
         if($model->load(\Yii::$app->request->post())) {
             $model->image = UploadedFile::getInstance($model, "image");
             if($model->upload() && $model->send()) {
                 \Yii::$app->session->setFlash("success", "Сообщения отправлены для $model->users пользователей");
-                return $this->redirect(["user/message", "offset" => $model->offset + $model->limit, "limit" => $model->limit]);
+                $model->offset += $model->limit;
+                return $this->redirect(["user/message", "Message" => $model]);
             }
         }
         return $this->render('message', compact('model'));
