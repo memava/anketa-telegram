@@ -717,8 +717,23 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public function getReserveLink()
 	{
-		return $this->reserve_bot ? : Config::get(Config::VAR_DEFAULT_RESERVE_BOT);
+		return $this->isActive() ? "https://t.me/".$this->bot_name : $this->reserve_bot ? : Config::get(Config::VAR_DEFAULT_RESERVE_BOT);
 	}
+
+    /**
+     * @return bool
+     * @throws TelegramException
+     */
+	public function isActive()
+    {
+        $tg = new Telegram($this->token, $this->bot_name);
+        try {
+            Request::getMe();
+            return true;
+        } catch (TelegramException $e) {
+            return false;
+        }
+    }
 
 	/**
 	 * @return array
