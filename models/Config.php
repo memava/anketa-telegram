@@ -39,6 +39,7 @@ class Config extends \yii\db\ActiveRecord
 	const VAR_TEXT_WEB_START = "text_web_start";
 	const VAR_TEXT_WEB_APIKEY = "text_web_apikey";
 	const VAR_TEXT_WEB_NAME = "text_web_name";
+	const VAR_TEXT_WEB_AFTER_CREATE = "text_web_after_create";
 
 	const VAR_TEXT_RESERVE = "text_reserve";
 

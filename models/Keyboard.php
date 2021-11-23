@@ -18,6 +18,7 @@ use Yii;
 class Keyboard extends \yii\db\ActiveRecord
 {
 	const TYPE_DONATE = 1;
+	const TYPE_BOTS = 2;
 
 	const STATUS_ACTIVE = 1;
 	const STATUS_INACTIVE = 0;
@@ -98,7 +99,11 @@ class Keyboard extends \yii\db\ActiveRecord
 				$kbd[][0] = ["text" => $button->name, "callback_data" => $button->action];
 			}
 		} else {
-			$kbd = self::getDefaultButtonsForDonate();
+		    if($type == self::TYPE_DONATE) {
+                $kbd = self::getDefaultButtonsForDonate();
+            } else if($type == self::TYPE_BOTS) {
+		        $kbd = self::getButtonsForBot($botId);
+            }
 		}
 		if($mainMenu) {
 			$kbd[][0] = ["text" => KeyboardHelper::BTN_MAIN_MENU, "callback_data" => "/mainmenu"];
@@ -132,4 +137,18 @@ class Keyboard extends \yii\db\ActiveRecord
 		}
 		return $kbd;
 	}
+
+    /**
+     * @param $botId
+     */
+	public static function getButtonsForBot($botId)
+    {
+        $bots = Bot::findOne($botId);
+        $bots = Bot::findAll(["user_id" => $bots->user_id]);
+        $kbd = [];
+        foreach ($bots as $bot) {
+            $kbd[][0] = ["text" => $bot->name, "callback_data" => "/bot ".$bot->id];
+        }
+        return $kbd;
+    }
 }

@@ -50,6 +50,7 @@ use yii\helpers\VarDumper;
  * @property-read string $reserveLink
  *
  * @property-read BotCountries[] $countries
+ * @property-read User $user
  */
 class Bot extends \yii\db\ActiveRecord
 {
@@ -186,12 +187,12 @@ class Bot extends \yii\db\ActiveRecord
 		}
 
 		if($user->bot->payment_system == Bot::PAYMENT_QIWI) {
-			$btns[][0] = ["text" => "Оплатить QIWI", "url" => $link["link_qiwi"]];
+			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_EPAY) {
-			$btns[][0] = ["text" => "Оплатить EPAY", "url" => $link["link_epay"]];
+			$btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_epay"]];
 		} else {
-			$btns[][0] = ["text" => "Оплатить QIWI", "url" => $link["link_qiwi"]];
-			$btns[][0] = ["text" => "Оплатить EPAY", "url" => $link["link_epay"]];
+			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
+			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
 		}
 		$kbd = new InlineKeyboard(...$btns);
 		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Спасибо! Теперь оплатите!", "reply_markup" => $kbd]);
@@ -393,9 +394,9 @@ class Bot extends \yii\db\ActiveRecord
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws TelegramException
      */
-	public static function acceptNewBot($chat_id, $username, $name, $botUsername, $text)
+	public static function acceptNewBot($id)
     {
-        $model = CRequest::getOrSetRequest($chat_id, $botUsername);
+        $model = CRequest::findOne($id);
         $model->sStatus(CRequest::STATUS_GENERATING);
 
         $bot = new Bot();
@@ -410,8 +411,19 @@ class Bot extends \yii\db\ActiveRecord
         $bot->type = self::TYPE_NORMAL;
         $bot->save(false);
 
-        $text = Config::get(Config::VAR_TEXT_WEB_APIKEY);
-        return $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+        $text = Config::get(Config::VAR_TEXT_WEB_AFTER_CREATE);
+        $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+
+        return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->id));
+    }
+
+    /**
+     * @param $id
+     */
+    public static function getBots($id)
+    {
+        $bot = Bot::findOne($id);
+        return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $id));
     }
 
 	/**
@@ -735,4 +747,12 @@ class Bot extends \yii\db\ActiveRecord
 		});
 		return array_slice($array, 0, $cnt);
 	}
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+	public function getUser()
+    {
+        return $this->hasOne(User::class, ["token" => $this->user_id]);
+    }
 }
