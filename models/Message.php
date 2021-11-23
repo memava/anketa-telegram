@@ -129,7 +129,7 @@ class Message extends \yii\base\Model
      */
     private function getUsers()
     {
-        if($this->bot == 0) return User::find()->all();
+        if($this->bot == 0) return User::find()->with('bot')->all();
         return User::find()->where(["bot_id" => $this->bot])->all();
     }
 }
