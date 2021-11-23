@@ -106,7 +106,7 @@ class ApiController extends Controller
 	 */
 	private function epay()
 	{
-		$data = $_POST;
+        $data = json_decode(file_get_contents("php://input"), true);
 		if(!isset($data["merchant_order_id"])) return true;
 
 		$transaction = Transaction::findOne($data["merchant_order_id"]);
