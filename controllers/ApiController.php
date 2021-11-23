@@ -90,7 +90,10 @@ class ApiController extends Controller
 		if(!isset($data["bill"])) return true;
 
 		$transaction = Transaction::findOne($data["bill"]["billId"]);
-		if($transaction && isset($data["bill"]["status"]) && $data["bill"]["status"]["value"] == "PAID") {
+		if(!$transaction) return true;
+
+		$transaction->payment_system = Bot::PAYMENT_QIWI;
+        if(isset($data["bill"]["status"]) && $data["bill"]["status"]["value"] == "PAID") {
 			return $transaction->accept();
 		} else {
 			return $transaction->reject();
@@ -107,9 +110,14 @@ class ApiController extends Controller
 		if(!isset($data["merchant_order_id"])) return true;
 
 		$transaction = Transaction::findOne($data["merchant_order_id"]);
-		if($transaction && $data["status"] == "successful_payment") {
+		if(!$transaction) return true;
+
+        $transaction->payment_system = Bot::PAYMENT_EPAY;
+		if($data["status"] == "successful_payment") {
 			return $transaction->accept();
-		}
+		} else {
+		    return $transaction->reject();
+        }
 	}
 
 	public function actionWebhoook()

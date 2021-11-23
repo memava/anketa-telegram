@@ -20,7 +20,7 @@ class TransactionSearch extends Transaction
     public function rules()
     {
         return [
-            [['id', 'type', 'bott','token', 'user_id', 'balance_before', 'balance_after', 'sum', 'currency', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'type', 'bott','token', 'user_id', 'balance_before', 'balance_after', 'sum', 'currency', 'status', 'created_at', 'updated_at', 'payment_system'], 'integer'],
         ];
     }
 
@@ -71,7 +71,8 @@ class TransactionSearch extends Transaction
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 			'user.token' => $this->token,
-			'user.bot_id' => $this->bott
+			'user.bot_id' => $this->bott,
+			'payment_system' => $this->payment_system,
         ]);
 
 		$dataProvider->sort->defaultOrder = ["id" => SORT_DESC];

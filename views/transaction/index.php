@@ -22,6 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            ["attribute" => "payment_system", "value" => function($m) {
+                return \app\models\Bot::getPaymentSystems()[$m->payment_system] ?: null;
+            }, 'filter' => \app\models\Bot::getPaymentSystems()],
             ["attribute" => "bott", 'value' => 'user.bot.name', "filter" => \yii\helpers\ArrayHelper::map(\app\models\Bot::find()->all(), "id", "name")],
             ['attribute' => 'token', 'value' => function($m) {
                 return Html::a($m->user->token, "tg://user?id=".$m->user->token);

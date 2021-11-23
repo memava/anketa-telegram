@@ -24,6 +24,7 @@ use yii\helpers\Url;
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $unique_id
+ * @property int|null $payment_system
  * @property string $link
  * @property-read int $amount
  *
