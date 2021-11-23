@@ -22,6 +22,9 @@ class Message extends \yii\base\Model
     public $oneMessage = 1;
     public $bot;
 
+    public $offset;
+    public $limit;
+
     public $users = 0;
 
     /**
@@ -31,6 +34,7 @@ class Message extends \yii\base\Model
     {
         return [
             [["message"], "string"],
+            [["limit", "offset"], "integer"],
             [["message"], "required"],
             [["image"], "file"],
             ["oneMessage", "boolean"]
@@ -109,7 +113,9 @@ class Message extends \yii\base\Model
 
             $tg = new Telegram($user->bot->token, $user->bot->bot_name);
             try {
-                Request::sendPhoto(["chat_id" => $user->token, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image)]);
+                if($this->image) {
+                    Request::sendPhoto(["chat_id" => $user->token, "photo" => Yii::getAlias('@app/web/uploads/' . $this->image)]);
+                }
                 $user->sendMessage($this->message, Keyboard::getMainKeyboard());
                 $this->users++;
             } catch (TelegramException $e) {
@@ -125,6 +131,7 @@ class Message extends \yii\base\Model
      */
     private function deletePhoto()
     {
+        if(!$this->image) return true;
         return @unlink(Yii::getAlias('@app/web/uploads/' . $this->image));
     }
 
@@ -133,7 +140,7 @@ class Message extends \yii\base\Model
      */
     private function getUsers()
     {
-        if($this->bot == 0) return User::find()->all();
-        return User::find()->where(["bot_id" => $this->bot])->all();
+        if($this->bot == 0) return User::find()->limit($this->limit)->offset($this->offset)->all();
+        return User::find()->where(["bot_id" => $this->bot])->limit($this->limit)->offset($this->offset)->all();
     }
 }

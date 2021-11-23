@@ -13,7 +13,17 @@ $this->params['breadcrumbs'][] = $this->title;
 $form = \yii\bootstrap4\ActiveForm::begin();
 ?>
 
-<?=$form->field($model, "bot")->dropdownList([0 => "Всем"] + ArrayHelper::map(Bot::find()->all(), "id", "name"))?>
+<div class="row">
+    <div class="col-sm-8">
+        <?=$form->field($model, "bot")->dropdownList([0 => "Всем"] + ArrayHelper::map(Bot::find()->all(), "id", "name"))?>
+    </div>
+    <div class="col-sm-2">
+        <?=$form->field($model, "offset")?>
+    </div>
+    <div class="col-sm-2">
+        <?=$form->field($model, "limit")?>
+    </div>
+</div>
 <?=$form->field($model, "message")->textarea()?>
 <?=$form->field($model, "image")->fileInput()?>
 <?=$form->field($model, "oneMessage")->checkbox()?>
