@@ -80,6 +80,8 @@ class Message extends \yii\base\Model
     private function sendOneMessage()
     {
         foreach ($this->getUsers() as $user) {
+            if(!$user->bot) continue;
+
             $tg = new Telegram($user->bot->token, $user->bot->bot_name);
             try {
                 if($this->image) {
