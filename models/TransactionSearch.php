@@ -20,7 +20,8 @@ class TransactionSearch extends Transaction
     public function rules()
     {
         return [
-            [['id', 'type', 'bott','token', 'user_id', 'balance_before', 'balance_after', 'sum', 'currency', 'status', 'created_at', 'updated_at', 'payment_system'], 'integer'],
+            [['id', 'type', 'bott','token', 'balance_before', 'balance_after', 'sum', 'currency', 'status', 'created_at', 'updated_at', 'payment_system'], 'integer'],
+            [["user_id"], "string"]
         ];
     }
 
@@ -62,7 +63,7 @@ class TransactionSearch extends Transaction
         $query->andFilterWhere([
             'id' => $this->id,
             'type' => $this->type,
-            'user_id' => $this->user_id,
+            //'user_id' => $this->user_id,
             'balance_before' => $this->balance_before,
             'balance_after' => $this->balance_after,
             'sum' => $this->sum,
@@ -74,6 +75,8 @@ class TransactionSearch extends Transaction
 			'user.bot_id' => $this->bott,
 			'payment_system' => $this->payment_system,
         ]);
+
+        $query->andFilterWhere(["like", "user.username", $this->user_id]);
 
 		$dataProvider->sort->defaultOrder = ["id" => SORT_DESC];
 
