@@ -31,7 +31,7 @@ class TransactionController extends Controller
 							'roles' => ['@'],
 						],
                         [
-                            "actions" => ["donate"],
+                            "actions" => ["donate", "success", "invalid"],
                             "allow" => true,
                             "roles" => ["?"]
                         ]
@@ -143,6 +143,22 @@ class TransactionController extends Controller
 		$this->layout = false;
 		return $this->render('donate', compact('model'));
 	}
+
+    /**
+     * @return string
+     */
+	public function actionSuccess()
+    {
+        return $this->renderPartial('success');
+    }
+
+    /**
+     * @return string
+     */
+	public function actionInvalid()
+    {
+        return $this->renderPartial('invalid');
+    }
 
     /**
      * Finds the Transaction model based on its primary key value.
