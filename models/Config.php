@@ -49,6 +49,8 @@ class Config extends \yii\db\ActiveRecord
 
 	const VAR_DEFAULT_RESERVE_BOT = "default_reserve_bot";
 
+	const VAR_ADMIN_PASSWORD = "admin_password";
+
     /**
      * {@inheritdoc}
      */

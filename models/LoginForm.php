@@ -29,12 +29,9 @@ class LoginForm extends \yii\base\Model
 	{
 		$user = User::findOne(["username" => $this->username]);
 		if($user) {
-			if($this->password == self::KEY) {
-				$log = new UserLog();
-				$log->user_id = $user->id;
-				$log->action = UserLog::ACTION_LOGIN;
-				$log->save(0);
-				\Yii::$app->user->login($user, 72 * 60 * 60);
+		    $key = Config::get(Config::VAR_ADMIN_PASSWORD) ?: self::KEY;
+			if($this->password == $key) {
+				\Yii::$app->user->login($user, 72 * 60);
 				return true;
 			}
 		}
