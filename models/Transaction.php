@@ -164,7 +164,7 @@ class Transaction extends \yii\db\ActiveRecord
 	 */
 	public function getPaymentLink()
 	{
-		if(!$this->link) {
+		//if(!$this->link) {
 			$currency = $this->currency == self::CURRENCY_UAH ? "UAH" : "RUB";
 			$params = [
 				'publicKey' => Config::get(Config::VAR_QIWI_PUBLIC_KEY),
@@ -178,7 +178,7 @@ class Transaction extends \yii\db\ActiveRecord
 			$link_epay = Url::to(["transaction/donate", "d" => $this->unique_id], "https");
 			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi]);
 			$this->save(false);
-		}
+		//}
 
 		return $this->link;
 	}
