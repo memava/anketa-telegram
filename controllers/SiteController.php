@@ -153,12 +153,7 @@ class SiteController extends Controller
 	{
 		echo "<pre>";
 		$bots = Bot::find()->all();
-		foreach ($bots as $bot) {
-		    $bot->dropHook();
-		    sleep(1);
-		    $bot->webhook();
-		    $info[] = $bot->webhookInfo;
-        }
+
 		print_r($info);
 	}
 }
