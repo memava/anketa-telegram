@@ -292,6 +292,8 @@ class Template extends \yii\db\ActiveRecord
 
         if($template) {
             $template->createPdf(0, true);
+        } else {
+            return "ERROR";
         }
         return '';
     }
