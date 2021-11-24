@@ -288,12 +288,16 @@ class Template extends \yii\db\ActiveRecord
             return false;
         }));
         $data = \Yii::$app->security->decryptByKey($d, md5($user["id"].$user["token"].$user["created_at"]));
-        $template = Template::findOne($data);
 
-        if($template) {
-            $template->createPdf(0, true, $data);
-        } else {
-            return "ERROR";
+        if($data) {
+            $data = json_decode($data, 1);
+            $template = Template::findOne($data["_template"]);
+
+            if ($template) {
+                $template->createPdf(0, true, $data);
+            } else {
+                return "ERROR";
+            }
         }
         return '';
     }
