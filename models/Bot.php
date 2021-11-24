@@ -715,8 +715,12 @@ class Bot extends \yii\db\ActiveRecord
 	public function getWebhookInfo()
 	{
 		$tg = new Telegram($this->token, $this->bot_name);
-		$info = Request::getWebhookInfo();
-		return VarDumper::dumpAsString($info->getResult());
+        try {
+            $info = Request::getWebhookInfo();
+            return VarDumper::dumpAsString($info->getResult());
+        } catch (TelegramException $e) {
+            return '';
+        }
 	}
 
 	/**
