@@ -596,7 +596,7 @@ class CRequest extends \yii\db\ActiveRecord
             $ex = explode(".", Yii::$app->request->hostName);
             $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
 
-			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", "https://donate".$domain."/bot/actual?name=".$event->user->bot->bot_name, $t));
+			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", "https://donate.".$domain."/bot/actual?name=".$event->user->bot->bot_name, $t));
 			$event->user->sendMessage($message, Keyboard::getMainKeyboard());
 		}
 
