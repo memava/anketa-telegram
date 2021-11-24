@@ -291,7 +291,7 @@ class Template extends \yii\db\ActiveRecord
         $template = Template::findOne($data);
 
         if($template) {
-            $template->createPdf(0, true);
+            $template->createPdf(0, true, $data);
         } else {
             return "ERROR";
         }
