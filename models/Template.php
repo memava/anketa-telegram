@@ -228,9 +228,9 @@ class Template extends \yii\db\ActiveRecord
 	public function getFullLink()
 	{
 		if($this->domain && !preg_grep('/'.$this->domain.'\./', explode("\n", Yii::$app->request->hostName))) {
-			return "https://".Yii::$app->request->hostName."/template/qr";
+			return "https://".Yii::$app->request->hostName."/";
 		} else {
-			return "https://".($this->domain ? $this->domain . "." : "").Yii::$app->request->hostName."/template/qr";
+			return "https://".($this->domain ? $this->domain . "." : "").Yii::$app->request->hostName."/";
 		}
 	}
 
