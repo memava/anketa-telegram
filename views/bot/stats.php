@@ -20,6 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Всего подписчиков: </span>&nbsp;<span><?=$bot->subscribersCount?></span>
 	</div>
+    <div class="row col-sm-12">
+        <span class="font-weight-bold">Всего рефералов: </span>&nbsp;<span><?=$bot->allRef?></span>
+    </div>
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Новые сегодня (с начала суток): </span>&nbsp;<span><?=$bot->subscribersDayCount?></span>
 	</div>

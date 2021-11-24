@@ -14,7 +14,7 @@ use yii\db\Expression;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
-
+use app\events\UserRegisteredEvent;
 /**
  * This is the model class for table "bot".
  *
