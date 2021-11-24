@@ -179,7 +179,20 @@ class Transaction extends \yii\db\ActiveRecord
             $ex = explode(".", Yii::$app->request->hostName);
             $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
 			$link_epay = "https://donate.".$domain."/transaction/donate?d=".$this->unique_id;
-			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi]);
+
+
+
+			$data = [
+			    "walletId" => Config::get(Config::VAR_GLOBAL24_KEY),
+                "cardAmount" => $this->sum_uah * 100,
+                "lang" => "ru",
+                "callbackUrl" => "https://donate.".$domain."/api/payment?id=".Bot::PAYMENT_GLOBAL24,
+                "quittanceDest" => "noemail@gmail.com",
+                "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)"
+            ];
+			$link_global24 = "https://global24.pro/wid/c2w/?".http_build_query($data);
+
+			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi, 'link_global24' => $link_global24]);
 			$this->save(false);
 		//}
 

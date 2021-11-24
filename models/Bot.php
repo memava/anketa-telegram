@@ -194,10 +194,15 @@ class Bot extends \yii\db\ActiveRecord
 			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_EPAY) {
 			$btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_epay"]];
-		} else {
+		} else if($user->bot->payment_system == Bot::PAYMENT_QIWI_EPAY) {
 			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
-		}
+		} else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24) {
+            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+        } else {
+            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+        }
 		$kbd = new InlineKeyboard(...$btns);
 		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Спасибо! Теперь оплатите!", "reply_markup" => $kbd]);
 	}
