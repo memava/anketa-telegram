@@ -147,8 +147,14 @@ class TransactionController extends Controller
     /**
      * @return string
      */
-	public function actionSuccess()
+	public function actionSuccess($d = null)
     {
+        if($d) {
+            $transaction = Transaction::findOne(["unique_id" => $d]);
+            if($transaction) {
+                $transaction->accept();
+            }
+        }
         return $this->renderPartial('success');
     }
 

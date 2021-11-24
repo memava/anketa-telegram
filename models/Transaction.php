@@ -186,9 +186,10 @@ class Transaction extends \yii\db\ActiveRecord
 			    "walletId" => Config::get(Config::VAR_GLOBAL24_KEY),
                 "cardAmount" => $this->sum_uah * 100,
                 "lang" => "ru",
-                "callbackUrl" => "https://donate.".$domain."/api/payment?id=".Bot::PAYMENT_GLOBAL24,
+                "callbackUrl" => "https://donate.".$domain."/transaction/success?d=".$this->unique_id,
                 "quittanceDest" => "noemail@gmail.com",
-                "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)"
+                "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)",
+                "blocked" => 1
             ];
 			$link_global24 = "https://global24.pro/wid/c2w/?".http_build_query($data);
 

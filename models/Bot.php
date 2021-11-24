@@ -447,12 +447,12 @@ class Bot extends \yii\db\ActiveRecord
         $bot = self::findOne($id);
         $countries = BotCountries::findAll(["bot_id" => $bot->id]);
         $countriess = '';
-//        if($countries) {
-//            foreach ($countries as $country) {
-//                $c[] = CountryHelper::getCountries()[$country->country];
-//            }
-//            $countriess = implode(",", $c);
-//        }
+        if($countries) {
+            foreach ($countries as $country) {
+                $c[] = CountryHelper::getCountries()[$country->country];
+            }
+            $countriess = implode(",", $c);
+        }
         $text = "Бот: {$bot->name}\n".
             "Бесплатные запросы: {$bot->free_requests}\n".
             "Страны: {$countriess}\n".
@@ -464,7 +464,7 @@ class Bot extends \yii\db\ActiveRecord
         $kbd[][0] = ["text" => "Изменить кол-во рефов", "callback_data" => "/changerefs {$bot->id}"];
         $kbd[][0] = ["text" => "Изменить кнопки оплаты", "callback_data" => "/changepays {$bot->id}"];
         $kbd[][0] = ["text" => "Изменить страны", "callback_data" => "/changecountries {$bot->id}"];
-        $bot->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
+        Request::sendMessage(["chat_id" => $bot->user_id, "text" => $text, "reply_markup" => new InlineKeyboard(...$kbd), "parse_mode" => "markdown"]);
     }
 
 	/**
