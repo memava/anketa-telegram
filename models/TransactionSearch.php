@@ -76,7 +76,7 @@ class TransactionSearch extends Transaction
         ]);
 
         $query->andFilterWhere(["like", "user.username", $this->user_id]);
-        $query->andWhere(["or", ["id" => $this->id], ["unique_id" => $this->id]]);
+        $query->andFilterWhere(["or", ["transaction.id" => $this->id], ["unique_id" => $this->id]]);
 
 		$dataProvider->sort->defaultOrder = ["created_at" => SORT_DESC];
 
