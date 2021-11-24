@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            'id',
             ["attribute" => "payment_system", "value" => function($m) {
                 return \app\models\Bot::getPaymentSystems()[$m->payment_system] ?? null;
             }, 'filter' => \app\models\Bot::getPaymentSystems()],
