@@ -7,6 +7,7 @@ use app\models\CRequest;
 use app\models\User;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Request;
 
 class GenericmessageCommand extends \Longman\TelegramBot\Commands\UserCommand
 {
@@ -35,7 +36,7 @@ class GenericmessageCommand extends \Longman\TelegramBot\Commands\UserCommand
 //        } else {
 //            return Bot::mainMenu($chat_id);
 //        }
-//		return Request::emptyResponse();
+		return Request::emptyResponse();
     }
 
     /**

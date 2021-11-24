@@ -398,7 +398,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function userRegistered(UserRegisteredEvent $event)
 	{
-
 		if($event->bot->isRefSystemEnabled() && $event->isRef()) {
 			$event->ref->increaseRef();
 			if($event->ref->ref_counter >= $event->bot->needRefsForRequest) {
@@ -406,7 +405,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 				$event->ref->resetRef();
 			}
 
-			$text = "Пользователь @{$event->ref->username} ({$event->ref->name}) привел @".$event->user->username;
+			$text = "Пользователь [{$event->ref->token}](tg://user?id={$event->ref->token}) @{$event->ref->username} ({$event->ref->name}) привел [{$event->user->token}](tg://user?id={$event->user->token}) @".$event->user->username;
 			$event->bot->sendFor(User::ROLE_ADMIN, $text);
 		}
 	}
