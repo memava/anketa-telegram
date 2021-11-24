@@ -436,7 +436,27 @@ class Bot extends \yii\db\ActiveRecord
     public static function getBot($id)
     {
         $bot = self::findOne($id);
-        $text = "Бот: {$bot->name}";
+        $countries = BotCountries::findAll(["bot_id" => $bot->id]);
+        $countriess = '';
+        if($countries) {
+            foreach ($countries as $country) {
+                $c[] = CountryHelper::getCountries()[$country->country];
+            }
+            $countriess = implode(",", $c);
+        }
+        $text = "Бот: {$bot->name}\n".
+            "Бесплатные запросы: {$bot->free_requests}\n".
+            "Страны: {$countriess}\n".
+            "Кол-во рефов для одного запроса: {$bot->requests_for_ref}\n".
+            "Сообщение после формирования запроса {link}: {$bot->message_after_request_if_no_requests}\n".
+            "Резервный бот: {$bot->reserve_bot}";
+        $kbd = [
+            ["text" => "Изменить кол-во бесплатных запросов", "callback_query" => "/changefreereq {$bot->id}"],
+            ["text" => "Изменить кол-во рефов", "callback_query" => "/changerefs {$bot->id}"],
+            ["text" => "Изменить кнопки оплаты", "callback_query" => "/changepays {$bot->id}"],
+            ["text" => "Изменить страны", "callback_query" => "/changecountries {$bot->id}"],
+        ];
+        $bot->user->sendMessage($text, new InlineKeyboard(...$kbd));
     }
 
 	/**
