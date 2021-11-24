@@ -113,13 +113,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 		switch ($lang) {
 			case CRequest::LANGUAGE_RU:
 				return [
-					self::GENDER_MALE => "Мужчина",
-					self::GENDER_FEMALE => "Женщина",
+					self::GENDER_MALE => "Мужской",
+					self::GENDER_FEMALE => "Женский",
 				];
 			case CRequest::LANGUAGE_UA:
 				return [
-					self::GENDER_MALE => "Чоловік",
-					self::GENDER_FEMALE => "Жінка",
+					self::GENDER_MALE => "Чоловiча",
+					self::GENDER_FEMALE => "Жiноча",
 				];
 			case CRequest::LANGUAGE_EN:
 				return [

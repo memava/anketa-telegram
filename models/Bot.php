@@ -433,6 +433,12 @@ class Bot extends \yii\db\ActiveRecord
         return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $id));
     }
 
+    public static function getBot($id)
+    {
+        $bot = self::findOne($id);
+        $text = "Бот: {$bot->name}";
+    }
+
 	/**
 	 * @param $chat_id
 	 * @param $username
