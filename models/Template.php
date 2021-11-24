@@ -279,7 +279,6 @@ class Template extends \yii\db\ActiveRecord
      */
 	public static function qr($d)
     {
-        print_r($d);
         $d = StringHelper::base64UrlDecode($d);
         $user = current(array_filter(User::find()->asArray()->all(), function ($v) use ($d){
             $h = md5($v["id"].$v["token"].$v["created_at"]);
