@@ -295,6 +295,13 @@ class Bot extends \yii\db\ActiveRecord
 		}
 	}
 
+
+    public function getAllRef(){
+
+        return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->count();
+
+    }
+
 	/**
 	 * @param $v
 	 * @throws \Throwable
