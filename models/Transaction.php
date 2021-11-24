@@ -175,7 +175,10 @@ class Transaction extends \yii\db\ActiveRecord
 
 			Yii::$app->qiwi->key = Config::get(Config::VAR_QIWI_PRIVATE_KEY);
 			$link_qiwi = Yii::$app->qiwi->createPaymentForm($params);
-			$link_epay = Url::to(["transaction/donate", "d" => $this->unique_id], "https");
+
+            $ex = explode(".", Yii::$app->request->hostName);
+            $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+			$link_epay = "https://donate.".$domain."/transaction/donate?d=".$this->unique_id;
 			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi]);
 			$this->save(false);
 		//}

@@ -228,7 +228,7 @@ class Template extends \yii\db\ActiveRecord
 	public function getFullLink()
 	{
 	    $ex = explode(".", Yii::$app->request->hostName);
-	    $domain = $ex[count($ex)-2] . " . " . $ex[count($ex)-1];
+	    $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
 
 	    if($this->domain) {
 	        return "https://".$this->domain . "." . $domain . "/";
