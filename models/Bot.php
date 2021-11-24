@@ -696,7 +696,7 @@ class Bot extends \yii\db\ActiveRecord
 				"status" => Transaction::STATUS_END,
 				"user.bot_id" => $this->id
 			])
-			->sum(new Expression("if(balance_before < balance_after, if(currency = ".Transaction::CURRENCY_UAH.", sum_uah, sum_rub), 0)")) ?: 0;
+			->sum(new Expression("if(balance_before < balance_after, sum_rub, 0)")) ?: 0;
 	}
 
 	/**
