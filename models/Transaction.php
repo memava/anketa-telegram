@@ -135,7 +135,7 @@ class Transaction extends \yii\db\ActiveRecord
 				$event->oldBalance = $this->balance_before;
 				$event->newBalance = $this->balance_after;
 				$event->type = $this->type;
-				$event->sum = $this->currency == self::CURRENCY_UAH ? $this->sum_uah : $this->sum_rub;
+				$event->sum = $this->sum_rub;
 				$this->user->trigger(User::EVENT_BALANCE_CHANGED, $event);
 			}
 			return true;
