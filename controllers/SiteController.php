@@ -152,9 +152,13 @@ class SiteController extends Controller
 	public function actionTest()
 	{
 		echo "<pre>";
-		$bot = Bot::findOne(9);
-		foreach ($bot->topRefs(20, true) as $ref) {
-			echo $ref["count"]."<br/>";
-		}
+		$bots = Bot::find()->all();
+		foreach ($bots as $bot) {
+		    $bot->dropHook();
+		    sleep(1);
+		    $bot->webhook();
+		    $info[] = $bot->webhookInfo;
+        }
+		print_r($info);
 	}
 }
