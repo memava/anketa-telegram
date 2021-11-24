@@ -421,7 +421,7 @@ class Bot extends \yii\db\ActiveRecord
         $text = Config::get(Config::VAR_TEXT_WEB_AFTER_CREATE);
         $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
 
-        return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->id));
+        return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
 
     /**
@@ -430,7 +430,7 @@ class Bot extends \yii\db\ActiveRecord
     public static function getBots($id)
     {
         $bot = Bot::findOne($id);
-        return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $id));
+        return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
 
     public static function getBot($id)
@@ -438,25 +438,24 @@ class Bot extends \yii\db\ActiveRecord
         $bot = self::findOne($id);
         $countries = BotCountries::findAll(["bot_id" => $bot->id]);
         $countriess = '';
-        if($countries) {
-            foreach ($countries as $country) {
-                $c[] = CountryHelper::getCountries()[$country->country];
-            }
-            $countriess = implode(",", $c);
-        }
+//        if($countries) {
+//            foreach ($countries as $country) {
+//                $c[] = CountryHelper::getCountries()[$country->country];
+//            }
+//            $countriess = implode(",", $c);
+//        }
         $text = "Бот: {$bot->name}\n".
             "Бесплатные запросы: {$bot->free_requests}\n".
             "Страны: {$countriess}\n".
             "Кол-во рефов для одного запроса: {$bot->requests_for_ref}\n".
             "Сообщение после формирования запроса {link}: {$bot->message_after_request_if_no_requests}\n".
             "Резервный бот: {$bot->reserve_bot}";
-        $kbd = [
-            ["text" => "Изменить кол-во бесплатных запросов", "callback_query" => "/changefreereq {$bot->id}"],
-            ["text" => "Изменить кол-во рефов", "callback_query" => "/changerefs {$bot->id}"],
-            ["text" => "Изменить кнопки оплаты", "callback_query" => "/changepays {$bot->id}"],
-            ["text" => "Изменить страны", "callback_query" => "/changecountries {$bot->id}"],
-        ];
-        $bot->user->sendMessage($text, new InlineKeyboard(...$kbd));
+        $text = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $text);
+        $kbd[][0] = ["text" => "Изменить кол-во бесплатных запросов", "callback_data" => "/changefreereq {$bot->id}"];
+        $kbd[][0] = ["text" => "Изменить кол-во рефов", "callback_data" => "/changerefs {$bot->id}"];
+        $kbd[][0] = ["text" => "Изменить кнопки оплаты", "callback_data" => "/changepays {$bot->id}"];
+        $kbd[][0] = ["text" => "Изменить страны", "callback_data" => "/changecountries {$bot->id}"];
+        $bot->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
     }
 
 	/**

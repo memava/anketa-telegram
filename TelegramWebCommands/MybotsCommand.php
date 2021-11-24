@@ -15,7 +15,6 @@ class MybotsCommand extends \Longman\TelegramBot\Commands\UserCommand
      */
     public function execute(): ServerResponse
     {
-        $bot = Bot::findByBotname($this->getMessage()->getBotUsername());
-        return $this->replyToChat("Ваши боты", ["reply_markup" => Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->id)]);
+        return $this->replyToChat("Ваши боты", ["reply_markup" => Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $this->getMessage()->getFrom()->getId())]);
     }
 }
