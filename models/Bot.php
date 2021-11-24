@@ -60,6 +60,8 @@ class Bot extends \yii\db\ActiveRecord
 	const PAYMENT_QIWI = 1;
 	const PAYMENT_EPAY = 2;
 	const PAYMENT_QIWI_EPAY = 3;
+	const PAYMENT_GLOBAL24 = 4;
+	const PAYMENT_GLOBAL24_EPAY = 5;
 
 	const TYPE_NORMAL = 1;
 	const TYPE_WEBMASTER = 2;
@@ -146,6 +148,8 @@ class Bot extends \yii\db\ActiveRecord
 			self::PAYMENT_QIWI => "Qiwi",
 			self::PAYMENT_EPAY => "Epay",
 			self::PAYMENT_QIWI_EPAY => "Qiwi + Epay",
+            self::PAYMENT_GLOBAL24 => "Global24",
+            self::PAYMENT_GLOBAL24_EPAY => "Global24 + Epay",
 		];
 	}
 

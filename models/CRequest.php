@@ -593,7 +593,10 @@ class CRequest extends \yii\db\ActiveRecord
 		}
 
 		if($t = Config::get(Config::VAR_TEXT_RESERVE)) {
-			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", Url::to(["bot/actual", "name" => $this->user->bot->bot_name], "https"), $t));
+            $ex = explode(".", Yii::$app->request->hostName);
+            $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+
+			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", "https://donate".$domain."/bot/actual?name=".$event->user->bot->bot_name, $t));
 			$event->user->sendMessage($message, Keyboard::getMainKeyboard());
 		}
 
