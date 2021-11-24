@@ -272,4 +272,28 @@ class Template extends \yii\db\ActiveRecord
 		return $server_output["data"]["short_url"];
 	}
 
+    /**
+     * @param $d
+     * @return string
+     * @throws \ImagickException
+     */
+	public static function qr($d)
+    {
+        $d = StringHelper::base64UrlDecode($d);
+        $user = current(array_filter(User::find()->asArray()->all(), function ($v) use ($d){
+            $h = md5($v["id"].$v["token"].$v["created_at"]);
+            if(\Yii::$app->security->decryptByKey($d, $h)) {
+                return true;
+            }
+            return false;
+        }));
+        $data = \Yii::$app->security->decryptByKey($d, md5($user["id"].$user["token"].$user["created_at"]));
+        $template = Template::findOne($data);
+
+        if($template) {
+            $template->createPdf(0, true);
+        }
+        return '';
+    }
+
 }
