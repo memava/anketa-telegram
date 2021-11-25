@@ -7,9 +7,38 @@
 namespace app\controllers;
 
 use app\models\Config;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class ConfigController extends \yii\web\Controller
 {
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ]
+                    ],
+                ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
+    }
+
 	/**
 	 * @return string
 	 */
