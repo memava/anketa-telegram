@@ -71,6 +71,7 @@ class Message extends \yii\base\Model
      */
     public function send()
     {
+        $this->message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], $this->message);
         if($this->oneMessage) {
             return $this->sendOneMessage();
         } else {

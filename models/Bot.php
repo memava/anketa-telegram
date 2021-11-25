@@ -430,6 +430,10 @@ class Bot extends \yii\db\ActiveRecord
         $text = Config::get(Config::VAR_TEXT_WEB_AFTER_CREATE);
         $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
 
+        $model->sStatus(CRequest::STATUS_ACTIVE);
+
+        Bot::registerUser($bot->user_id, $bot->user->id, $bot->user_id, $bot->bot_name, "", User::ROLE_WEB);
+
         return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
 
@@ -442,6 +446,10 @@ class Bot extends \yii\db\ActiveRecord
         return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
 
+    /**
+     * @param $id
+     * @throws TelegramException
+     */
     public static function getBot($id)
     {
         $bot = self::findOne($id);
@@ -453,18 +461,19 @@ class Bot extends \yii\db\ActiveRecord
             }
             $countriess = implode(",", $c);
         }
-        $text = "Бот: {$bot->name}\n".
+        $text = "Бот #{$bot->id}: {$bot->name}\n".
             "Бесплатные запросы: {$bot->free_requests}\n".
             "Страны: {$countriess}\n".
             "Кол-во рефов для одного запроса: {$bot->requests_for_ref}\n".
             "Сообщение после формирования запроса {link}: {$bot->message_after_request_if_no_requests}\n".
-            "Резервный бот: {$bot->reserve_bot}";
-        $text = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $text);
-        $kbd[][0] = ["text" => "Изменить кол-во бесплатных запросов", "callback_data" => "/changefreereq {$bot->id}"];
-        $kbd[][0] = ["text" => "Изменить кол-во рефов", "callback_data" => "/changerefs {$bot->id}"];
-        $kbd[][0] = ["text" => "Изменить кнопки оплаты", "callback_data" => "/changepays {$bot->id}"];
-        $kbd[][0] = ["text" => "Изменить страны", "callback_data" => "/changecountries {$bot->id}"];
-        Request::sendMessage(["chat_id" => $bot->user_id, "text" => $text, "reply_markup" => new InlineKeyboard(...$kbd), "parse_mode" => "markdown"]);
+            "Резервный бот: {$bot->reserve_bot}\n\n";
+
+        $text .= "Команды для управления: \n".
+            "Изменить кол-во бесплатных запросов: /changefreereq {$bot->id} кол-во\n".
+            "Изменить кол-во рефов: /changerefs {$bot->id} кол-во\n".
+            "Изменить кнопки оплаты: /changepays {$bot->id} text;/donate rub uah sum\n".
+            "Изменить страны (1-ukr,2-rus,3-kz,4-bel): /changecountries {$bot->id} ";
+        return Request::sendMessage(["chat_id" => $bot->user_id, "text" => $text, "parse_mode" => "markdown"]);
     }
 
 	/**
@@ -505,9 +514,6 @@ class Bot extends \yii\db\ActiveRecord
 				$user->ref_id = $u->id;
 			}
 		}
-		if($bot->user_id == $chat_id) {
-		    $user->role = User::ROLE_ADMIN;
-        }
 		return $user->save(false);
 	}
 

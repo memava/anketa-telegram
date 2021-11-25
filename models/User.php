@@ -498,7 +498,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function isAdmin()
 	{
-		return $this->role == self::ROLE_ADMIN;
+		return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_WEB]);
 	}
 
 	public function getFirstRef()
