@@ -34,7 +34,7 @@ class Message extends \yii\base\Model
     {
         return [
             [["message"], "string"],
-            [["limit", "offset"], "integer"],
+            [["limit", "offset", "bot"], "integer"],
             [["message"], "required"],
             [["image"], "file"],
             ["oneMessage", "boolean"]
@@ -71,7 +71,7 @@ class Message extends \yii\base\Model
      */
     public function send()
     {
-        $this->message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], $this->message);
+        //$this->message = str_replace(explode(" ", "* _ { } + !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], $this->message);
         if($this->oneMessage) {
             return $this->sendOneMessage();
         } else {
