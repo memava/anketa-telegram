@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'payment_system')->dropDownList(Bot::getPaymentSystems()) ?>
 
-	<?= $form->field($model, 'message_after_request_if_no_requests')->textInput() ?>
+	<?= $form->field($model, 'message_after_request_if_no_requests')->textarea(['rows' => 3]) ?>
 	<?= $form->field($model, 'reserve_bot')->textInput() ?>
 
     <?php foreach (\app\helpers\CountryHelper::getCountries() as $k => $country) {
