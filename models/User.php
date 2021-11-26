@@ -113,13 +113,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 		switch ($lang) {
 			case CRequest::LANGUAGE_RU:
 				return [
-					self::GENDER_MALE => "Мужчина",
-					self::GENDER_FEMALE => "Женщина",
+					self::GENDER_MALE => "Мужской",
+					self::GENDER_FEMALE => "Женский",
 				];
 			case CRequest::LANGUAGE_UA:
 				return [
-					self::GENDER_MALE => "Чоловік",
-					self::GENDER_FEMALE => "Жінка",
+					self::GENDER_MALE => "Чоловiча",
+					self::GENDER_FEMALE => "Жiноча",
 				];
 			case CRequest::LANGUAGE_EN:
 				return [
@@ -398,7 +398,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function userRegistered(UserRegisteredEvent $event)
 	{
-
 		if($event->bot->isRefSystemEnabled() && $event->isRef()) {
 			$event->ref->increaseRef();
 			if($event->ref->ref_counter >= $event->bot->needRefsForRequest) {
@@ -406,7 +405,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 				$event->ref->resetRef();
 			}
 
-			$text = "Пользователь @{$event->ref->username} ({$event->ref->name}) привел @".$event->user->username;
+			$text = "Пользователь [{$event->ref->token}](tg://user?id={$event->ref->token}) @{$event->ref->username} ({$event->ref->name}) привел [{$event->user->token}](tg://user?id={$event->user->token}) @".$event->user->username;
 			$event->bot->sendFor(User::ROLE_ADMIN, $text);
 		}
 	}
@@ -499,7 +498,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function isAdmin()
 	{
-		return $this->role == self::ROLE_ADMIN;
+		return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_WEB]);
 	}
 
 	public function getFirstRef()

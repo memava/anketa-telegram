@@ -227,11 +227,14 @@ class Template extends \yii\db\ActiveRecord
 	 */
 	public function getFullLink()
 	{
-		if($this->domain && !preg_grep('/'.$this->domain.'\./', explode("\n", Yii::$app->request->hostName))) {
-			return "https://".Yii::$app->request->hostName."/template/qr";
-		} else {
-			return "https://".($this->domain ? $this->domain . "." : "").Yii::$app->request->hostName."/template/qr";
-		}
+	    $ex = explode(".", Yii::$app->request->hostName);
+	    $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+
+	    if($this->domain) {
+	        return "https://".$this->domain . "." . $domain . "/";
+        } else {
+	        return "https://".Yii::$app->request->hostName . "/template/qr/";
+        }
 	}
 
 	/**
@@ -271,5 +274,35 @@ class Template extends \yii\db\ActiveRecord
 
 		return $server_output["data"]["short_url"];
 	}
+
+    /**
+     * @param $d
+     * @return string
+     * @throws \ImagickException
+     */
+	public static function qr($d)
+    {
+        $d = StringHelper::base64UrlDecode($d);
+        $user = current(array_filter(User::find()->asArray()->all(), function ($v) use ($d){
+            $h = md5($v["id"].$v["token"].$v["created_at"]);
+            if(\Yii::$app->security->decryptByKey($d, $h)) {
+                return true;
+            }
+            return false;
+        }));
+        $data = \Yii::$app->security->decryptByKey($d, md5($user["id"].$user["token"].$user["created_at"]));
+
+        if($data) {
+            $data = json_decode($data, 1);
+            $template = Template::findOne($data["_template"]);
+
+            if ($template) {
+                $template->createPdf(0, true, $data);
+            } else {
+                return "ERROR";
+            }
+        }
+        return '';
+    }
 
 }

@@ -152,9 +152,8 @@ class SiteController extends Controller
 	public function actionTest()
 	{
 		echo "<pre>";
-		$bot = Bot::findOne(9);
-		foreach ($bot->topRefs(20, true) as $ref) {
-			echo $ref["count"]."<br/>";
-		}
+        $ex = explode(".", Yii::$app->request->hostName);
+        $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+        return $domain;
 	}
 }

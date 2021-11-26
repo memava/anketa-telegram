@@ -27,7 +27,7 @@ class LoginForm extends \yii\base\Model
 	 */
 	public function login()
 	{
-		$user = User::findOne(["username" => $this->username]);
+		$user = User::findOne(["username" => $this->username, "role" => User::ROLE_ADMIN]);
 		if($user) {
 		    $key = Config::get(Config::VAR_ADMIN_PASSWORD) ?: self::KEY;
 			if($this->password == $key) {

@@ -292,7 +292,7 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->sStatus(self::STATUS_SELECT_DATE);
 
 		$text = Config::get(Config::VAR_TEXT_STEP_FIVE);
-		$kbd = new \Longman\TelegramBot\Entities\Keyboard([["text" => date("d.m.Y")]]);
+		$kbd = new \Longman\TelegramBot\Entities\Keyboard([["text" => date("d.m.Y", strtotime(date("Y-m-d"). " -1 day"))]], [["text" => date("d.m.Y", strtotime(date("Y-m-d")))]], [["text" => date("d.m.Y", strtotime(date("Y-m-d"). " +1 day"))]]);
 		$kbd->setResizeKeyboard(true)->setOneTimeKeyboard(true);
 		return $model->user->sendMessage($text, $kbd);
 	}
@@ -335,7 +335,7 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->sStatus(self::STATUS_CHECKING);
 
 		$text = "Проверьте правильность введеных данны!\n".
-			"Пациент: ".$model->fio."\n".
+			"ФИО: ".$model->fio."\n".
 			"Дата рождения: ".$model->birthday."\n".
 			"Дата проведения запроса: ".$model->request_date."\n".
 			"Город проведения запроса: ".$model->city."\n";
@@ -593,7 +593,10 @@ class CRequest extends \yii\db\ActiveRecord
 		}
 
 		if($t = Config::get(Config::VAR_TEXT_RESERVE)) {
-			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", Url::to(["bot/actual", "name" => $this->user->bot->bot_name], "https"), $t));
+            $ex = explode(".", Yii::$app->request->hostName);
+            $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+
+			$message = str_replace(explode(" ", "* _ { } + - !"), ["\*", "\_", "\{", "\}", "\+", "\-", "\!"], str_replace("{link}", "https://donate.".$domain."/bot/actual?name=".$event->user->bot->bot_name, $t));
 			$event->user->sendMessage($message, Keyboard::getMainKeyboard());
 		}
 

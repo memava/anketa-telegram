@@ -141,10 +141,9 @@ class Keyboard extends \yii\db\ActiveRecord
     /**
      * @param $botId
      */
-	public static function getButtonsForBot($botId)
+	public static function getButtonsForBot($userToken)
     {
-        $bots = Bot::findOne($botId);
-        $bots = Bot::findAll(["user_id" => $bots->user_id]);
+        $bots = Bot::findAll(["user_id" => $userToken]);
         $kbd = [];
         foreach ($bots as $bot) {
             $kbd[][0] = ["text" => $bot->name, "callback_data" => "/bot ".$bot->id];

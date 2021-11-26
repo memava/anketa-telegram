@@ -135,7 +135,7 @@ class Transaction extends \yii\db\ActiveRecord
 				$event->oldBalance = $this->balance_before;
 				$event->newBalance = $this->balance_after;
 				$event->type = $this->type;
-				$event->sum = $this->currency == self::CURRENCY_UAH ? $this->sum_uah : $this->sum_rub;
+				$event->sum = $this->sum_rub;
 				$this->user->trigger(User::EVENT_BALANCE_CHANGED, $event);
 			}
 			return true;
@@ -175,8 +175,25 @@ class Transaction extends \yii\db\ActiveRecord
 
 			Yii::$app->qiwi->key = Config::get(Config::VAR_QIWI_PRIVATE_KEY);
 			$link_qiwi = Yii::$app->qiwi->createPaymentForm($params);
-			$link_epay = Url::to(["transaction/donate", "d" => $this->unique_id], "https");
-			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi]);
+
+            $ex = explode(".", Yii::$app->request->hostName);
+            $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+			$link_epay = "https://donate.".$domain."/transaction/donate?d=".$this->unique_id;
+
+
+
+			$data = [
+			    "walletId" => Config::get(Config::VAR_GLOBAL24_KEY),
+                "cardAmount" => $this->sum_uah * 100,
+                "lang" => "ru",
+                "callbackUrl" => "https://donate.".$domain."/transaction/success?d=".$this->unique_id,
+                "quittanceDest" => "noemail@gmail.com",
+                "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)",
+                "blocked" => 1
+            ];
+			$link_global24 = "https://global24.pro/wid/c2w/?".http_build_query($data);
+
+			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi, 'link_global24' => $link_global24]);
 			$this->save(false);
 		//}
 

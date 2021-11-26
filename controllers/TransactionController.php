@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Bot;
 use app\models\Transaction;
 use app\models\TransactionSearch;
 use yii\filters\AccessControl;
@@ -147,8 +148,15 @@ class TransactionController extends Controller
     /**
      * @return string
      */
-	public function actionSuccess()
+	public function actionSuccess($d = null)
     {
+        if($d) {
+            $transaction = Transaction::findOne(["unique_id" => $d]);
+            if($transaction) {
+                $transaction->payment_system = Bot::PAYMENT_GLOBAL24;
+                $transaction->accept();
+            }
+        }
         return $this->renderPartial('success');
     }
 

@@ -61,7 +61,6 @@ class TransactionSearch extends Transaction
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'type' => $this->type,
             //'user_id' => $this->user_id,
             'balance_before' => $this->balance_before,
@@ -77,8 +76,9 @@ class TransactionSearch extends Transaction
         ]);
 
         $query->andFilterWhere(["like", "user.username", $this->user_id]);
+        $query->andFilterWhere(["or", ["transaction.id" => $this->id], ["unique_id" => $this->id]]);
 
-		$dataProvider->sort->defaultOrder = ["id" => SORT_DESC];
+		$dataProvider->sort->defaultOrder = ["created_at" => SORT_DESC];
 
         return $dataProvider;
     }

@@ -82,6 +82,9 @@ class CallbackqueryCommand extends SystemCommand
                 case 'bots':
                     Bot::getBots($data);
                     break;
+                case 'bot':
+                    Bot::getBot($data);
+                    break;
                 default:
                     Bot::newBot($chat_id, $this->getCallbackQuery()->getFrom()->getUsername(), $this->getCallbackQuery()->getFrom()->getFirstName(),$this->getCallbackQuery()->getFrom()->getBotUsername(), "");
                     break;

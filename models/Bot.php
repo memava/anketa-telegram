@@ -60,6 +60,8 @@ class Bot extends \yii\db\ActiveRecord
 	const PAYMENT_QIWI = 1;
 	const PAYMENT_EPAY = 2;
 	const PAYMENT_QIWI_EPAY = 3;
+	const PAYMENT_GLOBAL24 = 4;
+	const PAYMENT_GLOBAL24_EPAY = 5;
 
 	const TYPE_NORMAL = 1;
 	const TYPE_WEBMASTER = 2;
@@ -146,6 +148,8 @@ class Bot extends \yii\db\ActiveRecord
 			self::PAYMENT_QIWI => "Qiwi",
 			self::PAYMENT_EPAY => "Epay",
 			self::PAYMENT_QIWI_EPAY => "Qiwi + Epay",
+            self::PAYMENT_GLOBAL24 => "Global24",
+            self::PAYMENT_GLOBAL24_EPAY => "Global24 + Epay",
 		];
 	}
 
@@ -190,10 +194,15 @@ class Bot extends \yii\db\ActiveRecord
 			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_EPAY) {
 			$btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_epay"]];
-		} else {
+		} else if($user->bot->payment_system == Bot::PAYMENT_QIWI_EPAY) {
 			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
-		}
+		} else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24) {
+            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+        } else {
+            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+        }
 		$kbd = new InlineKeyboard(...$btns);
 		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Спасибо! Теперь оплатите!", "reply_markup" => $kbd]);
 	}
@@ -421,7 +430,11 @@ class Bot extends \yii\db\ActiveRecord
         $text = Config::get(Config::VAR_TEXT_WEB_AFTER_CREATE);
         $model->user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
 
-        return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->id));
+        $model->sStatus(CRequest::STATUS_ACTIVE);
+
+        Bot::registerUser($bot->user_id, $bot->user->id, $bot->user_id, $bot->bot_name, "", User::ROLE_WEB);
+
+        return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
 
     /**
@@ -430,7 +443,37 @@ class Bot extends \yii\db\ActiveRecord
     public static function getBots($id)
     {
         $bot = Bot::findOne($id);
-        return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $id));
+        return $bot->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
+    }
+
+    /**
+     * @param $id
+     * @throws TelegramException
+     */
+    public static function getBot($id)
+    {
+        $bot = self::findOne($id);
+        $countries = BotCountries::findAll(["bot_id" => $bot->id]);
+        $countriess = '';
+        if($countries) {
+            foreach ($countries as $country) {
+                $c[] = CountryHelper::getCountries()[$country->country];
+            }
+            $countriess = implode(",", $c);
+        }
+        $text = "Бот #{$bot->id}: {$bot->name}\n".
+            "Бесплатные запросы: {$bot->free_requests}\n".
+            "Страны: {$countriess}\n".
+            "Кол-во рефов для одного запроса: {$bot->requests_for_ref}\n".
+            "Сообщение после формирования запроса {link}: {$bot->message_after_request_if_no_requests}\n".
+            "Резервный бот: {$bot->reserve_bot}\n\n";
+
+        $text .= "Команды для управления: \n".
+            "Изменить кол-во бесплатных запросов: /changefreereq {$bot->id} кол-во\n".
+            "Изменить кол-во рефов: /changerefs {$bot->id} кол-во\n".
+            "Изменить кнопки оплаты: /changepays {$bot->id} text;/donate rub uah sum\n".
+            "Изменить страны (1-ukr,2-rus,3-kz,4-bel): /changecountries {$bot->id} ";
+        return Request::sendMessage(["chat_id" => $bot->user_id, "text" => $text, "parse_mode" => "markdown"]);
     }
 
 	/**
@@ -471,9 +514,6 @@ class Bot extends \yii\db\ActiveRecord
 				$user->ref_id = $u->id;
 			}
 		}
-		if($bot->user_id == $chat_id) {
-		    $user->role = User::ROLE_ADMIN;
-        }
 		return $user->save(false);
 	}
 
@@ -690,7 +730,7 @@ class Bot extends \yii\db\ActiveRecord
 				"status" => Transaction::STATUS_END,
 				"user.bot_id" => $this->id
 			])
-			->sum(new Expression("if(balance_before < balance_after, if(currency = ".Transaction::CURRENCY_UAH.", sum_uah, sum_rub), 0)")) ?: 0;
+			->sum(new Expression("if(balance_before < balance_after, sum_rub, 0)")) ?: 0;
 	}
 
 	/**
@@ -715,8 +755,12 @@ class Bot extends \yii\db\ActiveRecord
 	public function getWebhookInfo()
 	{
 		$tg = new Telegram($this->token, $this->bot_name);
-		$info = Request::getWebhookInfo();
-		return VarDumper::dumpAsString($info->getResult());
+        try {
+            $info = Request::getWebhookInfo();
+            return VarDumper::dumpAsString($info->getResult());
+        } catch (TelegramException $e) {
+            return '';
+        }
 	}
 
 	/**

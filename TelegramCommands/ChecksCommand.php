@@ -40,6 +40,7 @@ class ChecksCommand extends \Longman\TelegramBot\Commands\UserCommand
 						"\nНачислено: {$transaction->amount}".
 						"\n[профиль](tg://user?id={$transaction->user->token})";
 				}
+				$text = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $text);
 				return $this->replyToChat($text, ["parse_mode" => "markdown"]);
 			} else {
 				return $this->replyToChat("Нет транзакций!");
