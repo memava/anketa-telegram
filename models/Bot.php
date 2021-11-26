@@ -116,6 +116,9 @@ class Bot extends \yii\db\ActiveRecord
             'payment_system' => 'Платежка',
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
+            'bot_image' => 'Картинка бота',
+            'default_description' => 'Описание бота по умолчанию',
+            'custom_description' => 'Кастомное описание бота',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
     }
