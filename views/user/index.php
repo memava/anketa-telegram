@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             //'gender',
             //'country',
-            //'ref_id',
+            'ref_id',
             'ref_link',
             [
                 'attribute' => 'role',
