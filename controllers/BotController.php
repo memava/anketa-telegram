@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * BotController implements the CRUD actions for Bot model.
@@ -85,8 +86,10 @@ class BotController extends Controller
         $model = new Bot();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->bot_image = UploadedFile::getInstance($model, 'bot_image');
+                if($model->upload() && $model->save())
+                    return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -108,8 +111,13 @@ class BotController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post()) ) {
+
+            $model->bot_image = UploadedFile::getInstance($model, 'bot_image');
+            if($model->upload() && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
         }
 
         return $this->render('update', [
