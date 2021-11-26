@@ -487,7 +487,10 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public static function startCommand($chat_id, $username, $name, $botUsername, $text)
 	{
-		if(!User::findIdentityByAccessToken($chat_id, $botUsername)) {
+	    if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
+            self::registerUser($chat_id, $username, $name, $botUsername, $text);
+          return self::saveCountryOne($chat_id, $botUsername);
+        }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
 			return self::sendCountryMessage($chat_id, $botUsername);
 		} else if(!self::checkIsCountryFilled($chat_id, $botUsername)) {
@@ -517,6 +520,21 @@ class Bot extends \yii\db\ActiveRecord
 		return $user->save(false);
 	}
 
+
+
+
+    public static function saveCountryOne($chat_id,$botUsername){
+        if(User::findIdentityByAccessToken($chat_id, $botUsername)) {
+            $bot = Bot::findByBotname($botUsername);
+            $user = User::findIdentityByAccessToken($chat_id, $botUsername);
+            $user->country = self::getCountry($botUsername);
+            if($user->available_requests == 0 && !CRequest::isRequests($user->id)) $user->available_requests = $bot->free_requests;
+            $user->save(false);
+            return Request::emptyResponse();
+        }
+    }
+
+
 	/**
 	 * @return mixed
 	 * @throws TelegramException
@@ -527,6 +545,8 @@ class Bot extends \yii\db\ActiveRecord
 
 		return Request::sendMessage(["text" => "Выберите страну", "chat_id" => $chat_id, "reply_markup" => $keyboard]);
 	}
+
+
 
 	/**
 	 * @param $bot_id
@@ -548,6 +568,20 @@ class Bot extends \yii\db\ActiveRecord
 	{
 		return (bool) User::findIdentityByAccessToken($chat_id, $botUsername)->country;
 	}
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+	public static function checkCountCountry($botUsername){
+        $bot = Bot::findByBotname($botUsername);
+	    return BotCountries::find()->where(['bot_id' => $bot->id])->count();
+    }
+
+    public static function getCountry($botUsername){
+        $bot = Bot::findByBotname($botUsername);
+        return BotCountries::find()->where(['bot_id' => $bot->id])->one()->country;
+    }
 
 	/**
 	 * @return \yii\db\ActiveQuery
