@@ -94,8 +94,8 @@ class Bot extends \yii\db\ActiveRecord
             [['platform', 'free_requests', 'payment_system', 'created_at', 'updated_at', 'request_counter', 'type'], 'integer'],
             [['token', 'reserve_bot'], 'string'],
             [['requests_for_ref'], 'number'],
-            [['name', 'bot_name', ], 'string', 'max' => 255],
-            [['message_after_request_if_no_requests'],'string'],
+            [['name', 'bot_name', 'bot_image'], 'string', 'max' => 255],
+            [['message_after_request_if_no_requests','default_description','custom_description'],'string'],
 			[['country_1', 'country_2', 'country_3', 'country_4'], 'boolean']
         ];
     }
