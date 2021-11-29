@@ -137,9 +137,8 @@ class Template extends \yii\db\ActiveRecord
 		if(!$params) {
 			if ($id) {
 				$request = CRequest::findOne($id);
-                $params = $request->getParams();
 			} else {
-				$request = new \stdClass();
+				$request = new CRequest();
 				$request->id = 7777777;
 				$request->fio = "Пупок Василий Павлович";
 				$request->unique_id = 123123123;
@@ -154,7 +153,7 @@ class Template extends \yii\db\ActiveRecord
 				$filename = $this->slug . $request->unique_id;
 			}
 
-
+            $params = $request->getParams();
 
 			$params["_template"] = $this->id;
 		}
