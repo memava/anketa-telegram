@@ -138,7 +138,7 @@ class Template extends \yii\db\ActiveRecord
 			if ($id) {
 				$request = CRequest::findOne($id);
 			} else {
-				$request = new \stdClass();
+				$request = new CRequest();
 				$request->id = 7777777;
 				$request->fio = "Пупок Василий Павлович";
 				$request->unique_id = 123123123;
@@ -147,13 +147,14 @@ class Template extends \yii\db\ActiveRecord
 				$request->city = "Кривой Рог";
 				$request->slug = rand(100000000, 999999999);
 				$request->gender = 1;
+                $request->language = 1;
 			}
 
 			if(!$toScreen) {
 				$filename = $this->slug . $request->unique_id;
 			}
 
-			$params = $request->getParams();
+            $params = $request->getParams();
 
 			$params["_template"] = $this->id;
 		}

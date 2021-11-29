@@ -26,7 +26,8 @@
         "jamesryanbell/cloudflare": "^1.11",
         "rmrevin/yii2-fontawesome": "2.10.*",
         "ext-json": "*",
-        "christian-riesen/base32": "^1.6"
+        "christian-riesen/base32": "^1.6",
+        "kartik-v/yii2-widget-fileinput": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
