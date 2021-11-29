@@ -45,12 +45,13 @@ class Config extends \yii\db\ActiveRecord
 
 	const VAR_TEXT_RESERVE = "text_reserve";
 
+
 	const VAR_DEFAULT_BUTTONS = "default_buttons";
 
 	const VAR_HM_API_KEY = "hm_api_key";
 
 	const VAR_DEFAULT_RESERVE_BOT = "default_reserve_bot";
-
+    const VAR_DEFAULT_LINK_TEXT = "default_link_text";
 	const VAR_ADMIN_PASSWORD = "admin_password";
 
     /**

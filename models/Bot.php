@@ -504,16 +504,29 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public static function startCommand($chat_id, $username, $name, $botUsername, $text)
 	{
+
+        $bot = Bot::findByBotname($botUsername);
+        if($bot->custom_description){
+            $text = $bot->custom_description;
+        }else{
+            $text = Config::get(Config::VAR_DEFAULT_DESCRIPTION_BOTS);
+        }
+
 	    if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
+
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
+            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
           return self::saveCountryOne($chat_id, $botUsername);
         }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
+            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
 		} else if(!self::checkIsCountryFilled($chat_id, $botUsername)) {
+            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
 		}
 
+        Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 		return CRequest::newRequest($chat_id, $botUsername);
 	}
 
