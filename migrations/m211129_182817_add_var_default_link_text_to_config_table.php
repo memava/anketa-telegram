@@ -15,7 +15,7 @@ class m211129_182817_add_var_default_link_text_to_config_table extends Migration
         $this->insert(\app\models\Config::tableName(), [
             "variable" => \app\models\Config::VAR_DEFAULT_DESCRIPTION_BOTS,
             "value" => "",
-            "comment" => "Текст описания бота по умолчанию"
+            "comment" => "Приглашай друзей и получай бесплатные тесты! {link} текст по умолчанию"
         ]);
     }
 
