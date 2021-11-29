@@ -147,6 +147,7 @@ class Template extends \yii\db\ActiveRecord
 				$request->city = "Кривой Рог";
 				$request->slug = rand(100000000, 999999999);
 				$request->gender = 1;
+                $request->language = 1;
 			}
 
 			if(!$toScreen) {
