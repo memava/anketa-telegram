@@ -60,7 +60,7 @@ $config = [
 		'formatter' => [
 			"language" => "ru",
 			"timeZone" => "Europe/Kiev",
-			"datetimeFormat" => "dd.M.yyyy H:i:s"
+			"datetimeFormat" => "dd.MM.yyyy H:mm:ss"
 		]
 	],
 	'container' => [

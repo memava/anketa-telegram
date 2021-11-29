@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 
 <div class="bot-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'platform')->dropDownList(Bot::getPlatforms()) ?>
     <?= $form->field($model, 'type')->dropDownList(Bot::getTypes()) ?>
@@ -28,7 +28,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'payment_system')->dropDownList(Bot::getPaymentSystems()) ?>
 
-	<?= $form->field($model, 'message_after_request_if_no_requests')->textInput() ?>
+	<?= $form->field($model, 'message_after_request_if_no_requests')->textarea(['rows' => 3]) ?>
+
+    <?= $form->field($model, 'default_description')->textarea(['rows' => 3]) ?>
+
+    <?= $form->field($model, 'custom_description')->textarea(['rows' => 3]) ?>
+
+    <?= $form->field($model, 'bot_image')->fileInput() ?>
 	<?= $form->field($model, 'reserve_bot')->textInput() ?>
 
     <?php foreach (\app\helpers\CountryHelper::getCountries() as $k => $country) {
