@@ -34,6 +34,7 @@ use app\events\UserRegisteredEvent;
  * @property int|null $updated_at
  * @property int|null $type
  * @property int|null $user_id
+ * @property string $custom_description
  *
  * @property-read int $needRefsForRequest
  * @property-read int $requestForOneRef
@@ -120,7 +121,7 @@ class Bot extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
             'bot_image' => 'Картинка бота',
-            'custom_description' => 'Кастомное описание бота',
+            'custom_description' => 'Кастомное приветствие',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
     }
@@ -504,19 +505,17 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public static function startCommand($chat_id, $username, $name, $botUsername, $text)
 	{
-
         $bot = Bot::findByBotname($botUsername);
-        if($bot->custom_description){
+        if($bot->custom_description) {
             $text = $bot->custom_description;
-        }else{
+        } else {
             $text = Config::get(Config::VAR_DEFAULT_DESCRIPTION_BOTS);
         }
 
 	    if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
-
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
-          return self::saveCountryOne($chat_id, $botUsername);
+            return self::saveCountryOne($chat_id, $botUsername);
         }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
