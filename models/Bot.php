@@ -449,7 +449,7 @@ class Bot extends \yii\db\ActiveRecord
 
         $model->sStatus(CRequest::STATUS_ACTIVE);
 
-        Bot::registerUser($bot->user_id, $bot->user->id, $bot->user_id, $bot->bot_name, "", User::ROLE_WEB);
+        Bot::registerUser($bot->user_id, $bot->user_id, $bot->user_id, $bot->bot_name, "", User::ROLE_WEB);
 
         return $model->user->sendMessage("Ваши боты", Keyboard::getKeyboardFor(Keyboard::TYPE_BOTS, $bot->user_id));
     }
