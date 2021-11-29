@@ -97,7 +97,7 @@ class Bot extends \yii\db\ActiveRecord
             [['token', 'reserve_bot'], 'string'],
             [['requests_for_ref'], 'number'],
             [['name', 'bot_name','image'], 'string', 'max' => 255],
-            [['message_after_request_if_no_requests','default_description','custom_description'],'string'],
+            [['message_after_request_if_no_requests','custom_description'],'string'],
 			[['country_1', 'country_2', 'country_3', 'country_4'], 'boolean'],
             [['bot_image'],'file'],
         ];
@@ -120,7 +120,6 @@ class Bot extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
             'bot_image' => 'Картинка бота',
-            'default_description' => 'Описание бота по умолчанию',
             'custom_description' => 'Кастомное описание бота',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
@@ -130,6 +129,7 @@ class Bot extends \yii\db\ActiveRecord
     {
         if(!$this->bot_image) return true;
         $this->bot_image->saveAs(Yii::getAlias('@app/web/uploads/' . $this->name . '.' . $this->bot_image->extension));
+
         return true;
     }
 
@@ -534,7 +534,8 @@ class Bot extends \yii\db\ActiveRecord
 				$user->ref_id = $u->id;
 			}
 		}
-		return $user->save(false);
+
+            return $user->save(false);
 	}
 
 
