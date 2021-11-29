@@ -1,5 +1,6 @@
 <?php
 
+use kartik\file\FileInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -21,7 +22,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'domain')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'uTemplate')->fileInput() ?>
+    <?= $form->field($model, 'uTemplate')->widget(FileInput::classname(), [
+        'options' => ['accept' => 'image/*'],
+        'pluginOptions' => [
+            'initialPreview' => ($model->isNewRecord || !$model->slug) ? false : "/uploads/".$model->slug ."_template.jpg",
+            'initialPreviewAsData' => true,
+            'showPreview' => true,
+            'showRemove' => false,
+            'showUpload' => false
+        ],
+    ]) ?>
 
     <div class="row mb-2">
         <div class="col-sm-12">
