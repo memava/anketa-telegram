@@ -18,7 +18,7 @@ class Config extends \yii\db\ActiveRecord
 
 	const VAR_PAYS_PUBLIC_KEY = "pays_public_key";
 	const VAR_PAYS_PRIVATE_KEY = "pays_private_key";
-
+    const VAR_DEFAULT_DESCRIPTION_BOTS = 'default_description';
 	const VAR_GLOBAL24_KEY = "global24_key";
 
 	const VAR_CLOUDFLARE_KEY = "cloudflare_key";
