@@ -534,7 +534,8 @@ class Bot extends \yii\db\ActiveRecord
 				$user->ref_id = $u->id;
 			}
 		}
-		return $user->save(false);
+
+            return $user->save(false);
 	}
 
 
