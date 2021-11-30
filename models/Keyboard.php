@@ -19,6 +19,7 @@ class Keyboard extends \yii\db\ActiveRecord
 {
 	const TYPE_DONATE = 1;
 	const TYPE_BOTS = 2;
+    const TYPE_STATUSES = 3;
 
 	const STATUS_ACTIVE = 1;
 	const STATUS_INACTIVE = 0;
@@ -120,6 +121,30 @@ class Keyboard extends \yii\db\ActiveRecord
 			self::TYPE_DONATE => "Донат"
 		];
 	}
+
+    /**
+     * @param $lang
+     * @return array
+     */
+    public static function getButtonsForStatuses($lang)
+    {
+        $kbd = [];
+        switch ($lang) {
+            case CRequest::LANGUAGE_RU:
+                $kbd[] = ["text" => "Позитивный"];
+                $kbd[] = ["text" => "Негативный"];
+                break;
+            case CRequest::LANGUAGE_EN:
+                $kbd[] = ["text" => "Positive"];
+                $kbd[] = ["text" => "Negative"];
+                break;
+            case CRequest::LANGUAGE_UA:
+                $kbd[] = ["text" => "Виявлено"];
+                $kbd[] = ["text" => "Не виявлено"];
+                break;
+        }
+        return $kbd;
+    }
 
 	/**
 	 * @return array

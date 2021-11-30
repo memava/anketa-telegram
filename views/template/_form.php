@@ -50,6 +50,7 @@ use yii\widgets\ActiveForm;
                                 <b>testId</b> - номер запроса (рандомные 9 цифр)<br/>
                                 <b>city</b> - город<br/>
                                 <b>gender</b> - пол<br/>
+                                <b>status</b> - статус<br/>
                                 <b>age</b> - возраст<br/>
                                 <b>qr</b> - QR код<br/>
                             </span>

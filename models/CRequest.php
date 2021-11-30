@@ -25,6 +25,7 @@ use yii\helpers\Url;
  * @property string|null $birthday
  * @property string|null $request_date
  * @property string|null $slug
+ * @property string|null $s_status
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
@@ -55,6 +56,7 @@ class CRequest extends \yii\db\ActiveRecord
 	const STATUS_SELECT_CITY = 6;
 	const STATUS_CHECKING = 7;
 	const STATUS_GENERATING = 8;
+	const STATUS_SELECT_STATUS = 9;
 	const STATUS_ACTIVE = 10;
 	const STATUS_INACTIVE = 0;
 
@@ -68,6 +70,7 @@ class CRequest extends \yii\db\ActiveRecord
 		self::STATUS_SELECT_BIRTHDAY,
 		self::STATUS_SELECT_DATE,
 		self::STATUS_SELECT_CITY,
+		self::STATUS_SELECT_STATUS,
 		self::STATUS_CHECKING,
 		self::STATUS_GENERATING,
 	];
@@ -77,6 +80,7 @@ class CRequest extends \yii\db\ActiveRecord
 		self::STATUS_SELECT_BIRTHDAY,
 		self::STATUS_SELECT_DATE,
 		self::STATUS_SELECT_CITY,
+		self::STATUS_SELECT_STATUS,
 	];
 
 	const EXPIRE = 72 * 60 * 60;
@@ -98,6 +102,7 @@ class CRequest extends \yii\db\ActiveRecord
 			self::STATUS_CHECKING => "Проверка",
 			self::STATUS_GENERATING => "Формирование",
 			self::STATUS_ACTIVE => "Сформирован",
+			self::STATUS_SELECT_STATUS => "Ввод статуса",
 			self::STATUS_INACTIVE => "Неактивен"
 		];
 	}
@@ -136,7 +141,7 @@ class CRequest extends \yii\db\ActiveRecord
     {
         return [
             [['bot_id', 'user_id', 'city', 'language', 'fio', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['unique_id', 'birthday', 'request_date', 'slug'], 'string', 'max' => 255],
+            [['unique_id', 'birthday', 'request_date', 'slug', 's_status'], 'string', 'max' => 255],
         ];
     }
 
@@ -204,7 +209,6 @@ class CRequest extends \yii\db\ActiveRecord
 	{
 		$user = User::findIdentityByAccessToken($chat_id, $botUsername);
 		if(!$user->canCreateNewRequest()) {
-
 			$text = Config::get(Config::VAR_TEXT_NO_REQUESTS);
 			$kbd = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $user->bot->id);
 			$user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
@@ -237,9 +241,26 @@ class CRequest extends \yii\db\ActiveRecord
 	{
 		$model = self::getOrSetRequest($chat_id, $botUsername);
 		$model->language = $lang;
+		$model->sStatus(self::STATUS_SELECT_STATUS);
+
+		$text = Config::get(Config::VAR_TEXT_STEP_ONE_ONE);
+        $kbd = new \Longman\TelegramBot\Entities\Keyboard(Keyboard::getButtonsForStatuses($lang));
+		return $model->user->sendMessage($text, $kbd);
+	}
+
+    /**
+	 * @param $chat_id
+	 * @param $lang
+	 * @return \Longman\TelegramBot\Entities\ServerResponse
+	 * @throws \Longman\TelegramBot\Exception\TelegramException
+	 */
+	public static function selectStatus($chat_id, $status, $botUsername)
+	{
+		$model = self::getOrSetRequest($chat_id, $botUsername);
+		$model->s_status = $status;
 		$model->sStatus(self::STATUS_SELECT_FIO);
 
-		$text = Config::get(Config::VAR_TEXT_STEP_TWO).self::LANGUAGES[$lang];
+		$text = Config::get(Config::VAR_TEXT_STEP_TWO).self::LANGUAGES[$model->language];
 		return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
 	}
 
@@ -548,7 +569,7 @@ class CRequest extends \yii\db\ActiveRecord
 			'country' => CountryHelper::getCountries()[$this->user->country],
 			'username' => $this->user->username,
 			'origRequestDate' => $this->request_date,
-
+            'status' => $this->s_status
 		];
 
 		$params["_userId"] = $this->user->id;

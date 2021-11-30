@@ -27,6 +27,7 @@ class Config extends \yii\db\ActiveRecord
 
 	const VAR_TEXT_NO_REQUESTS = "text_no_requests";
 	const VAR_TEXT_STEP_ONE = "text_step_one";
+	const VAR_TEXT_STEP_ONE_ONE = "text_step_one_one";
 	const VAR_TEXT_STEP_TWO = "text_step_two";
 	const VAR_TEXT_STEP_THREE = "text_step_three";
 	const VAR_TEXT_STEP_FOUR = "text_step_four";
