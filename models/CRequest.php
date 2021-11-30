@@ -207,7 +207,11 @@ class CRequest extends \yii\db\ActiveRecord
 	 */
 	public static function newRequest($chat_id, $botUsername)
 	{
+
+
 		$user = User::findIdentityByAccessToken($chat_id, $botUsername);
+
+        $user->sendMessage('test',false);
 		if(!$user->canCreateNewRequest()) {
 			$text = Config::get(Config::VAR_TEXT_NO_REQUESTS);
 			$kbd = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $user->bot->id);

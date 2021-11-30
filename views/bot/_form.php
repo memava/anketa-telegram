@@ -30,6 +30,7 @@ use yii\widgets\ActiveForm;
 
 	<?= $form->field($model, 'message_after_request_if_no_requests')->textarea(['rows' => 3]) ?>
 
+
     <?= $form->field($model, 'custom_description')->textarea(['rows' => 3]) ?>
 
     <?= $form->field($model, 'bot_image')->fileInput() ?>

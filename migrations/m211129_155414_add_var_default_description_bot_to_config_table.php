@@ -13,9 +13,9 @@ class m211129_155414_add_var_default_description_bot_to_config_table extends Mig
     public function safeUp()
     {
         $this->insert(\app\models\Config::tableName(), [
-            "variable" => \app\models\Config::VAR_DEFAULT_DESCRIPTION_BOTS,
+            "variable" => \app\models\Config::VAR_DEFAULT_LINK_TEXT,
             "value" => "",
-            "comment" => "Текст описания бота по умолчанию"
+            "comment" => "Приглашай друзей и получай бесплатные тесты! {link}"
         ]);
     }
 
