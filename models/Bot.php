@@ -516,8 +516,9 @@ class Bot extends \yii\db\ActiveRecord
 
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
+
           return self::saveCountryOne($chat_id, $botUsername);
-        }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
+        }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1 || self::checkCountCountry($botUsername) == false ) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
@@ -547,6 +548,10 @@ class Bot extends \yii\db\ActiveRecord
 				$user->ref_id = $u->id;
 			}
 		}
+
+        if($bot->user_id == $chat_id) {
+            $user->role = User::ROLE_ADMIN;
+        }
 
             return $user->save(false);
 	}
@@ -622,11 +627,15 @@ class Bot extends \yii\db\ActiveRecord
 
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return mixed
      */
 	public static function checkCountCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
-	    return BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        $count = BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        if(!empty($count)){
+            return $count;
+        }
+	   return false;
     }
 
     public static function getCountry($botUsername){
