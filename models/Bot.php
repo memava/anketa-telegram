@@ -34,6 +34,7 @@ use app\events\UserRegisteredEvent;
  * @property int|null $updated_at
  * @property int|null $type
  * @property int|null $user_id
+ * @property string $custom_description
  *
  * @property-read int $needRefsForRequest
  * @property-read int $requestForOneRef
@@ -120,7 +121,7 @@ class Bot extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
             'bot_image' => 'Картинка бота',
-            'custom_description' => 'Кастомное описание бота',
+            'custom_description' => 'Кастомное приветствие',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
     }
@@ -504,21 +505,18 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public static function startCommand($chat_id, $username, $name, $botUsername, $text)
 	{
-
         $bot = Bot::findByBotname($botUsername);
-        if($bot->custom_description){
-            $text = $bot->custom_description;
-        }else{
-            $text = Config::get(Config::VAR_DEFAULT_DESCRIPTION_BOTS);
+        if($bot->custom_description) {
+            $textPrivet = $bot->custom_description;
+        } else {
+            $textPrivet = Config::get(Config::VAR_DEFAULT_DESCRIPTION_BOTS);
         }
 
 	    if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
-
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
-
-          return self::saveCountryOne($chat_id, $botUsername);
-        }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1 || self::checkCountCountry($botUsername) == false ) {
+            return self::saveCountryOne($chat_id, $botUsername);
+        }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
@@ -527,7 +525,7 @@ class Bot extends \yii\db\ActiveRecord
 			return self::sendCountryMessage($chat_id, $botUsername);
 		}
 
-        Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
+        Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 		return CRequest::newRequest($chat_id, $botUsername);
 	}
 
@@ -549,32 +547,8 @@ class Bot extends \yii\db\ActiveRecord
 			}
 		}
 
-        if($bot->user_id == $chat_id) {
-            $user->role = User::ROLE_ADMIN;
-        }
-
             return $user->save(false);
 	}
-
-
-
-    /**
-     * @return bool to chat_id
-     */
-	public static function checkCrequest($chat_id,$username){
-        $user = User::find()->where(['username' => $username])->one();
-        $timeUserAdd = $user['created_at'];
-        $cRequest = CRequest::find()->where(['user_id' => $user['id']])->one();
-
-        if($cRequest && $cRequest['status'] !=  CRequest::STATUS_GENERATING || $cRequest['status'] !=  CRequest::STATUS_ACTIVE){
-          if((time() - $timeUserAdd) > 600){
-              Request::sendMessage(["text" => Config::get(Config::VAR_TEXT_NO_CREATE_REQUEST), "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
-          }
-            return true;
-        }
-        return false;
-
-    }
 
 
 
@@ -627,15 +601,11 @@ class Bot extends \yii\db\ActiveRecord
 
 
     /**
-     * @return mixed
+     * @return \yii\db\ActiveQuery
      */
 	public static function checkCountCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
-        $count = BotCountries::find()->where(['bot_id' => $bot->id])->count();
-        if(!empty($count)){
-            return $count;
-        }
-	   return false;
+	    return BotCountries::find()->where(['bot_id' => $bot->id])->count();
     }
 
     public static function getCountry($botUsername){
