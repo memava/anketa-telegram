@@ -314,7 +314,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
 			if($user->available_requests == 0 && !CRequest::isRequests($user->id)) $user->available_requests = $user->bot->free_requests;
 			$user->save(false);
-			return Request::emptyResponse();
+			return CRequest::newRequest($chat_id, $botUsername);
 		} else {
 			return Request::sendMessage([
 				"text" => "Неверная страна!",

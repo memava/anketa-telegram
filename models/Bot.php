@@ -16,6 +16,8 @@ use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use app\events\UserRegisteredEvent;
+use yii\web\UploadedFile;
+
 /**
  * This is the model class for table "bot".
  *
@@ -35,6 +37,9 @@ use app\events\UserRegisteredEvent;
  * @property int|null $type
  * @property int|null $user_id
  * @property string $custom_description
+ * @property string $image
+ *
+ * @property UploadedFile $uImage
  *
  * @property-read int $needRefsForRequest
  * @property-read int $requestForOneRef
@@ -47,6 +52,7 @@ use app\events\UserRegisteredEvent;
  * @property-read int $clicksPayCount
  * @property-read int $clicksPayDayCount
  * @property-read int $usersSumPaid
+ *
  *
  * @property-read string $webhookInfo
  * @property-read string $reserveLink
@@ -69,7 +75,7 @@ class Bot extends \yii\db\ActiveRecord
 	const TYPE_WEBMASTER = 2;
 
 
-    public $bot_image;
+    public $uImage;
 	/**
 	 * @return array
 	 */
@@ -100,7 +106,7 @@ class Bot extends \yii\db\ActiveRecord
             [['name', 'bot_name','image'], 'string', 'max' => 255],
             [['message_after_request_if_no_requests','custom_description'],'string'],
 			[['country_1', 'country_2', 'country_3', 'country_4'], 'boolean'],
-            [['bot_image'],'file'],
+            [['uImage'],'file'],
         ];
     }
 
@@ -120,16 +126,22 @@ class Bot extends \yii\db\ActiveRecord
             'payment_system' => 'Платежка',
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
-            'bot_image' => 'Картинка бота',
+            'uImage' => 'Картинка бота',
             'custom_description' => 'Кастомное приветствие',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function upload()
     {
-        if(!$this->bot_image) return true;
-        $this->bot_image->saveAs(Yii::getAlias('@app/web/uploads/' . $this->name . '.' . $this->bot_image->extension));
+        if(!$this->uImage) return true;
+        $name = $this->bot_name . ".".$this->uImage->extension;
+
+        $this->uImage->saveAs(Yii::getAlias("@app/web/uploads/$name"));
+        $this->image = $name;
 
         return true;
     }
@@ -506,13 +518,25 @@ class Bot extends \yii\db\ActiveRecord
 	public static function startCommand($chat_id, $username, $name, $botUsername, $text)
 	{
         $bot = Bot::findByBotname($botUsername);
+
         if($bot->custom_description) {
             $textPrivet = $bot->custom_description;
         } else {
             $textPrivet = Config::get(Config::VAR_DEFAULT_DESCRIPTION_BOTS);
         }
+        if($bot->image || Config::get(Config::VAR_DEFAULT_IMAGE)) {
+            $image = $bot->image ?: Config::get(Config::VAR_DEFAULT_IMAGE);
+            Request::sendPhoto([
+                "chat_id" => $chat_id,
+                "caption" => $textPrivet,
+                "photo" => Yii::getAlias('@app/web/uploads/' . $image),
+                "parse_mode" => "markdown"
+            ]);
+        } else {
+            Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove(), "parse_mode" => "markdown"]);
+        }
 
-	    if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
+        if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
             Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
             return self::saveCountryOne($chat_id, $botUsername);
@@ -525,7 +549,6 @@ class Bot extends \yii\db\ActiveRecord
 			return self::sendCountryMessage($chat_id, $botUsername);
 		}
 
-        Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 		return CRequest::newRequest($chat_id, $botUsername);
 	}
 
@@ -550,9 +573,11 @@ class Bot extends \yii\db\ActiveRecord
             return $user->save(false);
 	}
 
-
-
-
+    /**
+     * @param $chat_id
+     * @param $botUsername
+     * @return \Longman\TelegramBot\Entities\ServerResponse|void
+     */
     public static function saveCountryOne($chat_id,$botUsername){
         if(User::findIdentityByAccessToken($chat_id, $botUsername)) {
             $bot = Bot::findByBotname($botUsername);

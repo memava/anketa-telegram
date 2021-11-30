@@ -87,7 +87,7 @@ class BotController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $model->image = UploadedFile::getInstance($model, 'bot_image');
+                $model->uImage = UploadedFile::getInstance($model, 'uImage');
                 if($model->upload() && $model->save())
                     return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -113,7 +113,7 @@ class BotController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()) ) {
 
-            $model->image = UploadedFile::getInstance($model, 'bot_image');
+            $model->uImage = UploadedFile::getInstance($model, 'uImage');
             if($model->upload() && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }

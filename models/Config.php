@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "config".
@@ -10,9 +11,15 @@ use Yii;
  * @property string|null $variable
  * @property string|null $value
  * @property string|null $comment
+ * @property string|null $type
+ *
+ * @property UploadedFile $uFile
  */
 class Config extends \yii\db\ActiveRecord
 {
+    const TYPE_STRING = "string";
+    const TYPE_FILE = "file";
+
 	const VAR_QIWI_PUBLIC_KEY = "qiwi_public_key";
 	const VAR_QIWI_PRIVATE_KEY = "qiwi_private_key";
 
@@ -46,8 +53,8 @@ class Config extends \yii\db\ActiveRecord
 
 	const VAR_TEXT_RESERVE = "text_reserve";
 
-
 	const VAR_DEFAULT_BUTTONS = "default_buttons";
+    const VAR_DEFAULT_IMAGE = "default_image";
 
 	const VAR_HM_API_KEY = "hm_api_key";
 
@@ -56,6 +63,8 @@ class Config extends \yii\db\ActiveRecord
 	const VAR_ADMIN_PASSWORD = "admin_password";
 
     //const VAR_DEFAULT_START_TEXT = "default_start_text";
+
+    public $uFile;
 
     /**
      * {@inheritdoc}
@@ -72,7 +81,8 @@ class Config extends \yii\db\ActiveRecord
     {
         return [
             [['value', 'comment'], 'string'],
-            [['variable'], 'string', 'max' => 255],
+            [['variable', 'file'], 'string', 'max' => 255],
+            ["uFile", "file"]
         ];
     }
 
@@ -96,4 +106,29 @@ class Config extends \yii\db\ActiveRecord
 		$c = self::findOne(["variable" => $variable]);
 		return $c ? $c->value : null;
 	}
+
+    /**
+     * @return bool
+     */
+    public function upload()
+    {
+        if(!$this->uFile) return true;
+
+        $name = $this->variable.".".$this->uFile->extension;
+        $this->uFile->saveAs(Yii::getAlias("@app/web/uploads/$name"));
+        $this->value = $name;
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        if($this->type == self::TYPE_FILE) {
+            @unlink(Yii::getAlias("@app/web/uploads/".$this->value));
+        }
+        $this->value = "";
+        return $this->save(false);
+    }
 }

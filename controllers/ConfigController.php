@@ -7,8 +7,10 @@
 namespace app\controllers;
 
 use app\models\Config;
+use app\models\Transaction;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 class ConfigController extends \yii\web\Controller
 {
@@ -48,11 +50,29 @@ class ConfigController extends \yii\web\Controller
 		return $this->render('index', ["models" => $models]);
 	}
 
+    /**
+     * @return \yii\web\Response
+     */
 	public function actionSave()
 	{
 		$config = Config::findOne(["variable" => \Yii::$app->request->post('Config')["variable"]]);
-		$config->value = \Yii::$app->request->post('Config')["value"];
-		$config->save(false);
-		return $this->redirect(["config/index"]);
+        if($config->load(\Yii::$app->request->post())) {
+            $config->uFile = UploadedFile::getInstance($config, "uFile");
+            if($config->upload() && $config->save(false)) {
+                return $this->redirect(["config/index"]);
+            }
+        }
 	}
+
+    /**
+     * @param $var
+     * @return void|\yii\web\Response
+     */
+    public function actionClear($var)
+    {
+        $config = Config::findOne($var);
+        if($config->clear()) {
+            return $this->redirect(["config/index"]);
+        }
+    }
 }

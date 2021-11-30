@@ -5,6 +5,7 @@ namespace app\models;
 use app\helpers\CountryHelper;
 use app\helpers\KeyboardHelper;
 use Longman\TelegramBot\Entities\InlineKeyboard;
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 
 /**
@@ -104,6 +105,8 @@ class Keyboard extends \yii\db\ActiveRecord
                 $kbd = self::getDefaultButtonsForDonate();
             } else if($type == self::TYPE_BOTS) {
 		        $kbd = self::getButtonsForBot($botId);
+            } else if($type == self::TYPE_STATUSES) {
+                $kbd = self::getButtonsForStatuses($botId);
             }
 		}
 		if($mainMenu) {
@@ -131,16 +134,16 @@ class Keyboard extends \yii\db\ActiveRecord
         $kbd = [];
         switch ($lang) {
             case CRequest::LANGUAGE_RU:
-                $kbd[] = ["text" => "Позитивный"];
-                $kbd[] = ["text" => "Негативный"];
+                $kbd[][] = ["text" => "Позитивный", "callback_data" => "/selectstatus Позитивный"];
+                $kbd[][] = ["text" => "Негативный", "callback_data" => "/selectstatus Негативный"];
                 break;
             case CRequest::LANGUAGE_EN:
-                $kbd[] = ["text" => "Positive"];
-                $kbd[] = ["text" => "Negative"];
+                $kbd[][] = ["text" => "Positive", "callback_data" => "/selectstatus Positive"];
+                $kbd[][] = ["text" => "Negative", "callback_data" => "/selectstatus Negative"];
                 break;
             case CRequest::LANGUAGE_UA:
-                $kbd[] = ["text" => "Виявлено"];
-                $kbd[] = ["text" => "Не виявлено"];
+                $kbd[][] = ["text" => "Виявлено", "callback_data" => "/selectstatus Виявлено"];
+                $kbd[][] = ["text" => "Не виявлено", "callback_data" => "/selectstatus Не виявлено"];
                 break;
         }
         return $kbd;

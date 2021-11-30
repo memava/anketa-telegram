@@ -80,7 +80,6 @@ class CRequest extends \yii\db\ActiveRecord
 		self::STATUS_SELECT_BIRTHDAY,
 		self::STATUS_SELECT_DATE,
 		self::STATUS_SELECT_CITY,
-		self::STATUS_SELECT_STATUS,
 	];
 
 	const EXPIRE = 72 * 60 * 60;
@@ -207,11 +206,8 @@ class CRequest extends \yii\db\ActiveRecord
 	 */
 	public static function newRequest($chat_id, $botUsername)
 	{
-
-
 		$user = User::findIdentityByAccessToken($chat_id, $botUsername);
 
-        $user->sendMessage('test',false);
 		if(!$user->canCreateNewRequest()) {
 			$text = Config::get(Config::VAR_TEXT_NO_REQUESTS);
 			$kbd = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $user->bot->id);
@@ -248,7 +244,7 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->sStatus(self::STATUS_SELECT_STATUS);
 
 		$text = Config::get(Config::VAR_TEXT_STEP_ONE_ONE);
-        $kbd = new \Longman\TelegramBot\Entities\Keyboard(Keyboard::getButtonsForStatuses($lang));
+        $kbd = Keyboard::getKeyboardFor(Keyboard::TYPE_STATUSES, $lang, false);
 		return $model->user->sendMessage($text, $kbd);
 	}
 

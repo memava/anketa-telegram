@@ -113,9 +113,6 @@ class GenericmessageCommand extends UserCommand
 			case CRequest::STATUS_SELECT_CITY:
 				return CRequest::selectCity($chat_id, $text, $this->getMessage()->getBotUsername());
 				break;
-            case CRequest::STATUS_SELECT_STATUS:
-				return CRequest::selectStatus($chat_id, $text, $this->getMessage()->getBotUsername());
-				break;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Bot;
+use kartik\file\FileInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -33,7 +34,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'custom_description')->textarea(['rows' => 3]) ?>
 
-    <?= $form->field($model, 'bot_image')->fileInput() ?>
+    <?= $form->field($model, 'uImage')->widget(FileInput::classname(), [
+        'options' => ['accept' => 'image/*'],
+        'pluginOptions' => [
+            'initialPreview' => ($model->isNewRecord || !$model->image) ? false : "/uploads/".$model->image,
+            'initialPreviewAsData' => true,
+            'showPreview' => true,
+            'showRemove' => true,
+            'showUpload' => false
+        ],
+    ])  ?>
 	<?= $form->field($model, 'reserve_bot')->textInput() ?>
 
     <?php foreach (\app\helpers\CountryHelper::getCountries() as $k => $country) {

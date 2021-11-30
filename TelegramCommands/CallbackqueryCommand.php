@@ -89,15 +89,18 @@ class CallbackqueryCommand extends SystemCommand
 				case 'newrequest':
 					CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
+                case 'selectstatus':
+					CRequest::selectStatus($chat_id, $data, $this->getCallbackQuery()->getBotUsername());
+					break;
 				case 'donate':
 					Bot::payment($chat_id, $data, $this->getCallbackQuery()->getBotUsername());
 					break;
 				default:
-					Bot::startCommand($chat_id, $this->getCallbackQuery()->getFrom()->getUsername(), $this->getCallbackQuery()->getFrom()->getFirstName(),$this->getCallbackQuery()->getFrom()->getBotUsername(), "");
+                    CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
 			}
 		} else {
-			return Bot::startCommand($chat_id, $this->getCallbackQuery()->getFrom()->getUsername(), $this->getCallbackQuery()->getFrom()->getFirstName(),$this->getCallbackQuery()->getFrom()->getBotUsername(), "");
+            CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 		}
 	}
 }
