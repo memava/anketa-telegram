@@ -75,7 +75,7 @@ class Keyboard extends \yii\db\ActiveRecord
 	 * @param false $donate
 	 * @return \Longman\TelegramBot\Entities\Keyboard
 	 */
-	public static function getMainKeyboard($donate = false)
+	public static function getMainKeyboard($donate = true)
 	{
 		if(!$donate) {
 			$kbd = new \Longman\TelegramBot\Entities\Keyboard(["text" => KeyboardHelper::BTN_CREATE_REQUEST], ["text" => KeyboardHelper::BTN_MY_PROFILE]);
