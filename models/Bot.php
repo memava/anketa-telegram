@@ -202,7 +202,7 @@ class Bot extends \yii\db\ActiveRecord
 	{
 		$bot = self::findByBotname($botName)->id;
 		$keyboard = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $bot);
-		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Донат", "reply_markup" => $keyboard]);
+		return Request::sendMessage(["chat_id" => $chat_id, "text" => "*Пополните балланс любым удобным способом:*", "reply_markup" => $keyboard]);
 	}
 
 	/**
