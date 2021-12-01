@@ -10,7 +10,7 @@ class KeyboardHelper
 {
 	const BTN_MY_PROFILE = "\xF0\x9F\x91\xBB Мой профиль";
 	const BTN_CREATE_REQUEST = "\xF0\x9F\x93\x8B Создать запрос";
-	const BTN_CHANGE_COUNTRY = "Сменить страну";
+	const BTN_CHANGE_COUNTRY = "Изменить страну";
 	const BTN_DONATE = "\xF0\x9F\x92\xB3 Пополнить балланс";
 	const BTN_MAIN_MENU = "\xF0\x9F\x8F\xA0 Главное меню";
 
