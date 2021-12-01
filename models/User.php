@@ -408,7 +408,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 			$text = "Пользователь [{$event->ref->token}](tg://user?id={$event->ref->token}) @{$event->ref->username} ({$event->ref->name}) привел [{$event->user->token}](tg://user?id={$event->user->token}) @{$event->user->username}";
 			$event->bot->sendFor(User::ROLE_ADMIN, $text);
 		}
-	вот 
+	}
 
 	/**
 	 * @param BalanceChangedEvent $event
