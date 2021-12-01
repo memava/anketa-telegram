@@ -118,16 +118,16 @@ class Bot extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'platform' => 'Платформа',
-            'name' => 'Название',
-            'bot_name' => 'НазваниеМессен',
-            'token' => 'АПИ ключ',
+            'name' => 'Название для админки',
+            'bot_name' => 'Логин в мессенжере',
+            'token' => 'API ключ',
             'free_requests' => 'Бесплатные запросы',
             'requests_for_ref' => 'Кол-во реф. для 1 запроса',
             'payment_system' => 'Платежка',
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
-            'uImage' => 'Картинка бота',
-            'custom_description' => 'Кастомное приветствие',
+            'uImage' => 'Картинка для кастомного приветствия бота',
+            'custom_description' => 'Кастомное приветствие бота',
 			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
         ];
     }
@@ -164,8 +164,8 @@ class Bot extends \yii\db\ActiveRecord
 	public static function getTypes()
 	{
 		return [
-			self::TYPE_NORMAL => "Обычный",
-			self::TYPE_WEBMASTER => "Для вебмастеров",
+			self::TYPE_NORMAL => "Для пользователя",
+			self::TYPE_WEBMASTER => "Для вебмастера",
 		];
 	}
 
@@ -225,16 +225,16 @@ class Bot extends \yii\db\ActiveRecord
 		} else if($user->bot->payment_system == Bot::PAYMENT_EPAY) {
 			$btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_epay"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_QIWI_EPAY) {
-			$btns[][0] = ["text" => "Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
+			$btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24) {
             $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
         } else {
-            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+            $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_global24"]];
             $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
         }
 		$kbd = new InlineKeyboard(...$btns);
-		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Спасибо! Теперь оплатите!", "reply_markup" => $kbd]);
+		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Счет сформирован. Произведите оплату и она мгновенно поступит в бот:", "reply_markup" => $kbd]);
 	}
 
 	/**
