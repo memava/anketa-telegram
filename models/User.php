@@ -353,7 +353,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 		$text = "Моя страна: ".CountryHelper::getCountries()[$user->country]."\n".
 			"Приглашено друзей: 0\n".
 			"Доступно запросов: ".$user->available_requests."\n".
-			"Ссылка для приглашения: ".$user->getRefLink();
+			"Ссылка для приглашения друзей: ".$user->getRefLink();
 		$kbd = new \Longman\TelegramBot\Entities\Keyboard([KeyboardHelper::BTN_MAIN_MENU], [KeyboardHelper::BTN_CHANGE_COUNTRY]);
 		$text = str_replace(explode(" ", "* _ { } + !"), ["\*", "\_", "\{", "\}", "\+", "\!"], $text);
 		$kbd->setResizeKeyboard(true);
@@ -405,10 +405,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 				$event->ref->resetRef();
 			}
 
-			$text = "Пользователь [{$event->ref->token}](tg://user?id={$event->ref->token}) @{$event->ref->username} ({$event->ref->name}) привел [{$event->user->token}](tg://user?id={$event->user->token}) @".$event->user->username;
+			$text = "Пользователь [{$event->ref->token}](tg://user?id={$event->ref->token}) @{$event->ref->username} ({$event->ref->name}) привел [{$event->user->token}](tg://user?id={$event->user->token}) @{$event->user->username}";
 			$event->bot->sendFor(User::ROLE_ADMIN, $text);
 		}
-	}
+	вот 
 
 	/**
 	 * @param BalanceChangedEvent $event
