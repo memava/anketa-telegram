@@ -8,19 +8,17 @@ namespace app\helpers;
 
 class KeyboardHelper
 {
-	const BTN_MY_PROFILE = "Мой профиль";
-	const BTN_CREATE_REQUEST = "Создать запрос";
+	const BTN_MY_PROFILE = "\xF0\x9F\x91\xBB Мой профиль";
+	const BTN_CREATE_REQUEST = "\xF0\x9F\x93\x8B Создать запрос";
 	const BTN_CHANGE_COUNTRY = "Сменить страну";
-	const BTN_DONATE = "Поддержать бота / Donate";
-	const BTN_MAIN_MENU = "Главное меню";
-	const BTN_PAY = "Пополнить балланс";
+	const BTN_DONATE = "\xF0\x9F\x92\xB3 Пополнить балланс";
+	const BTN_MAIN_MENU = "\xF0\x9F\x8F\xA0 Главное меню";
 
 	const BUTTONS = [
 		self::BTN_MY_PROFILE,
 		self::BTN_CREATE_REQUEST,
 		self::BTN_CHANGE_COUNTRY,
 		self::BTN_DONATE,
-		self::BTN_PAY,
 		self::BTN_MAIN_MENU
 	];
 
