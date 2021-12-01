@@ -647,13 +647,22 @@ class Bot extends \yii\db\ActiveRecord
 
 
     /**
-     * @return integer
+     * @params $botUsername
+     * @return mixed
      */
-	public static function checkCountCountry($botUsername){
+    public static function checkCountCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
-	    return BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        $count = BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        if(!empty($count)){
+            return $count;
+        }
+        return false;
     }
 
+    /**
+     * @params $botUsername
+     * @return \yii\db\ActiveQuery
+     */
     public static function getCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
         return BotCountries::find()->where(['bot_id' => $bot->id])->one()->country;
