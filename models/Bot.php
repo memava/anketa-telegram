@@ -538,14 +538,11 @@ class Bot extends \yii\db\ActiveRecord
 
         if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
-            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
             return self::saveCountryOne($chat_id, $botUsername);
         }else if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) > 1) {
 			self::registerUser($chat_id, $username, $name, $botUsername, $text);
-            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
 		} else if(!self::checkIsCountryFilled($chat_id, $botUsername)) {
-            Request::sendMessage(["text" => $text, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
 			return self::sendCountryMessage($chat_id, $botUsername);
 		}
 
@@ -590,6 +587,27 @@ class Bot extends \yii\db\ActiveRecord
     }
 
 
+
+    /**
+     * @params $chat_id
+     * @params $username
+     * @return \Longman\TelegramBot\Entities\ServerResponse|mixed
+     */
+    public static function checkCrequest($chat_id,$username){
+        $user = User::find()->where(['username' => $username])->one();
+        $timeUserAdd = $user['created_at'];
+        $cRequest = CRequest::find()->where(['user_id' => $user['id']])->one();
+
+        if($cRequest && $cRequest['status'] !=  CRequest::STATUS_GENERATING || $cRequest['status'] !=  CRequest::STATUS_ACTIVE){
+            if((time() - $timeUserAdd) > 600){
+                Request::sendMessage(["text" => Config::get(Config::VAR_TEXT_NO_CREATE_REQUEST), "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
+            }
+            return true;
+        }
+        return false;
+
+    }
+
 	/**
 	 * @return mixed
 	 * @throws TelegramException
@@ -626,13 +644,22 @@ class Bot extends \yii\db\ActiveRecord
 
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @params $botUsername
+     * @return mixed
      */
-	public static function checkCountCountry($botUsername){
+    public static function checkCountCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
-	    return BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        $count = BotCountries::find()->where(['bot_id' => $bot->id])->count();
+        if(!empty($count)){
+            return $count;
+        }
+        return false;
     }
 
+    /**
+     * @params $botUsername
+     * @return \yii\db\ActiveQuery
+     */
     public static function getCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
         return BotCountries::find()->where(['bot_id' => $bot->id])->one()->country;
