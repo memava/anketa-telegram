@@ -82,7 +82,7 @@ class Template extends \yii\db\ActiveRecord
 	{
 		if(!$this->uTemplate) return true;
 
-		$name = $this->slug."_template";
+		$name = $this->slug."_template.".$this->uTemplate->extension;
 		$this->uTemplate->saveAs(Yii::getAlias('@app/web/uploads/' . $name . '.' . $this->uTemplate->extension));
 		$this->template = $name;
 		return true;
@@ -127,7 +127,8 @@ class Template extends \yii\db\ActiveRecord
 	 */
 	public function createPdf($id, $toScreen = false, $params = [])
 	{
-		$template = Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg");
+        $tpl = file_exists(Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg")) ? Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg") : Yii::getAlias("@app/web/uploads/" . $this->template);
+		$template = $tpl;
 		$font_default = Yii::getAlias("@app/web/css/font_1.ttf");
 		$font_bold = Yii::getAlias("@app/web/css/font_1_bold.ttf");
 
