@@ -21,10 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
 		<span class="font-weight-bold">Всего подписчиков: </span>&nbsp;<span><?=$bot->subscribersCount?></span>
 	</div>
     <div class="row col-sm-12">
-        <span class="font-weight-bold">Всего рефералов: </span>&nbsp;<span><?=$bot->allRef?></span>
+	    <span class="font-weight-bold">Новые сегодня (с начала суток): </span>&nbsp;<span><?=$bot->subscribersDayCount?></span>
+      
     </div>
 	<div class="row col-sm-12">
-		<span class="font-weight-bold">Новые сегодня (с начала суток): </span>&nbsp;<span><?=$bot->subscribersDayCount?></span>
+		  <span class="font-weight-bold">Всего рефералов: </span>&nbsp;<span><?=$bot->allRef?></span>
 	</div>
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Запросов всего: </span>&nbsp;<span><?=$bot->requestCount?></span>
@@ -32,17 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Запросов сегодня: </span>&nbsp;<span><?=$bot->requestDayCount?></span>
 	</div>
-	<div class="row col-sm-12">
+<!--	<div class="row col-sm-12">
 		<span class="font-weight-bold">Нажатия на донат всего: </span>&nbsp;<span><?=$bot->clicksDonateCount?></span>
 	</div>
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Нажатия на донат сегодня: </span>&nbsp;<span><?=$bot->clicksDonateDayCount?></span>
 	</div>
+ -->
 	<div class="row col-sm-12">
 		<span class="font-weight-bold">Нажатия на оплату всего: </span>&nbsp;<span><?=$bot->clicksPayCount?></span>
 	</div>
 	<div class="row col-sm-12">
-		<span class="font-weight-bold">Нажатия на оплату всего: </span>&nbsp;<span><?=$bot->clicksPayDayCount?></span>
+		<span class="font-weight-bold">Нажатия на оплату сегодня: </span>&nbsp;<span><?=$bot->clicksPayDayCount?></span>
 	</div>
     <div class="row col-sm-12">
 		<span class="font-weight-bold">Общий заработок: </span>&nbsp;<span><?=$bot->usersSumPaid?></span>
@@ -57,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-12">
             <div class="row">
 				<?php
-				foreach ($bot->topRefs(20, false) as $ref) {
+				foreach ($bot->topRefs(50, false) as $ref) {
 					$model = $ref["model"];
 					/**
 					 * @var User $model
@@ -72,13 +74,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row col-sm-12">
         <div class="col-sm-12">
             <div class="row">
-                <span class="font-weight-bold">Топ 20 рефводов за все время</span>
+                <span class="font-weight-bold">Топ 20 рефводов за сегодня</span>
             </div>
         </div>
         <div class="col-sm-12">
             <div class="row">
 				<?php
-				foreach ($bot->topRefs(20, true) as $ref) {
+				foreach ($bot->topRefs(50, true) as $ref) {
 					$model = $ref["model"];
 					/**
 					 * @var User $model
