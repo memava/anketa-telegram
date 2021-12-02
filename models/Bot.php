@@ -346,6 +346,15 @@ class Bot extends \yii\db\ActiveRecord
 	 * @throws \Throwable
 	 * @throws \yii\db\StaleObjectException
 	 */
+	
+	
+    public function getTodayRef(){
+
+        return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->andWhere([">", "created_at", strtotime("today", time())])count();
+
+    }
+	
+	
 	public function setCountry_3($v)
 	{
 		if($v) {

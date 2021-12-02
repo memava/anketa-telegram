@@ -28,6 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		  <span class="font-weight-bold">Всего рефералов: </span>&nbsp;<span><?=$bot->allRef?></span>
 	</div>
 	<div class="row col-sm-12">
+		  <span class="font-weight-bold">Сегодня рефералов: </span>&nbsp;<span><?=$bot->TodayRef?></span>
+	</div>
+	<div class="row col-sm-12">
 		<span class="font-weight-bold">Запросов всего: </span>&nbsp;<span><?=$bot->requestCount?></span>
 	</div>
 	<div class="row col-sm-12">
