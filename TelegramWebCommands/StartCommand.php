@@ -21,6 +21,6 @@ class StartCommand extends \Longman\TelegramBot\Commands\UserCommand
             Bot::registerUser($this->getMessage()->getChat()->getId(), $this->getMessage()->getChat()->getUsername(), $this->getMessage()->getChat()->getFirstName(), $this->getMessage()->getBotUsername(), $this->getMessage()->getText(true), User::ROLE_WEB);
         }
         $kbd = new InlineKeyboard([["text" => "Создать бота", "callback_data" => "/newbot"]]);
-        return $this->replyToChat(Config::get(Config::VAR_TEXT_WEB_START), ["reply_markup" => $kbd]);
+        return $this->replyToChat(Config::get(Config::VAR_TEXT_WEB_START), ["reply_markup" => $kbd, "parse_mode" => "markdown"]);
     }
 }
