@@ -588,25 +588,7 @@ class Bot extends \yii\db\ActiveRecord
 
 
 
-    /**
-     * @params $chat_id
-     * @params $username
-     * @return \Longman\TelegramBot\Entities\ServerResponse|mixed
-     */
-    public static function checkCrequest($chat_id,$username){
-        $user = User::find()->where(['username' => $username])->one();
-        $timeUserAdd = $user['created_at'];
-        $cRequest = CRequest::find()->where(['user_id' => $user['id']])->one();
 
-        if($cRequest && $cRequest['status'] !=  CRequest::STATUS_GENERATING || $cRequest['status'] !=  CRequest::STATUS_ACTIVE){
-            if((time() - $timeUserAdd) > 600){
-                Request::sendMessage(["text" => Config::get(Config::VAR_TEXT_NO_CREATE_REQUEST), "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove()]);
-            }
-            return true;
-        }
-        return false;
-
-    }
 
 	/**
 	 * @return mixed
