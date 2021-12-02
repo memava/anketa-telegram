@@ -537,12 +537,10 @@ class Bot extends \yii\db\ActiveRecord
             $image = $bot->image ?: Config::get(Config::VAR_DEFAULT_IMAGE);
             Request::sendPhoto([
                 "chat_id" => $chat_id,
-                "caption" => $textPrivet,
                 "photo" => Yii::getAlias('@app/web/uploads/' . $image)
             ]);
-        } else {
-            Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove(), "parse_mode" => "markdown"]);
         }
+        Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove(), "parse_mode" => "markdown"]);
 
         if(!User::findIdentityByAccessToken($chat_id, $botUsername) && self::checkCountCountry($botUsername) == 1){
             self::registerUser($chat_id, $username, $name, $botUsername, $text);
