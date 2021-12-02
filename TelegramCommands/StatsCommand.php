@@ -16,11 +16,13 @@ class StatsCommand extends UserCommand
 		if($this->isAdmin()) {
 			$bot = Bot::findByBotname($this->getMessage()->getBotUsername());
 			$text = "Всего подписчиков: $bot->subscribersCount
-Новые сегодня (с начала суток): $bot->subscribersDayCount
+Сегодня подписчиков: $bot->subscribersDayCount
 Запросов всего: $bot->requestCount
 Запросов сегодня: $bot->requestDayCount
-Нажатия на донат всего: $bot->clicksDonateCount
-Нажатия на донат сегодня: $bot->clicksDonateDayCount
+/** 
+* Нажатия на донат всего: $bot->clicksDonateCount
+* Нажатия на донат сегодня: $bot->clicksDonateDayCount
+*/
 Нажатия на оплату всего: $bot->clicksPayCount
 Нажатия на оплату за день: $bot->clicksPayDayCount ";
 			return $this->replyToChat($text);
