@@ -128,7 +128,7 @@ class Bot extends \yii\db\ActiveRecord
             'updated_at' => 'Изменен',
             'uImage' => 'Картинка для кастомного приветствия бота',
             'custom_description' => 'Кастомное приветствие бота',
-			'message_after_request_if_no_requests' => "Сообщение после формирования запроса {link}"
+			'message_after_request_if_no_requests' => "Сообщение после формирования запроса (приводи друзей...) {link}"
         ];
     }
 
