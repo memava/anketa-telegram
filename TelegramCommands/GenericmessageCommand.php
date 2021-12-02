@@ -85,7 +85,7 @@ class GenericmessageCommand extends UserCommand
 					$k[] = $country->country;
 				}
 				$keyboard = CountryHelper::getKeyboardFor($k);
-				return $this->replyToChat("Выберите страну", ["reply_markup" => $keyboard]);
+				return $this->replyToChat("*Выберите страну:*", ["reply_markup" => $keyboard]);
 				break;
 		}
 	}
