@@ -350,7 +350,7 @@ class Bot extends \yii\db\ActiveRecord
 	
     public function getTodayRef(){
 
-        return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->andWhere([">", "created_at", strtotime("today", time())])count();
+        return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->andWhere([">", "created_at", strtotime("today", time())])->count();
 
     }
 	
