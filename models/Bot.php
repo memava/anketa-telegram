@@ -138,7 +138,7 @@ class Bot extends \yii\db\ActiveRecord
     public function upload()
     {
         if(!$this->uImage) return true;
-        $name = $this->bot_name . ".".$this->uImage->extension;
+        $name =  md5($this->bot_name) . ".".$this->uImage->extension;
 
         $this->uImage->saveAs(Yii::getAlias("@app/web/uploads/$name"));
         $this->image = $name;
