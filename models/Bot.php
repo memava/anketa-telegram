@@ -538,8 +538,7 @@ class Bot extends \yii\db\ActiveRecord
             Request::sendPhoto([
                 "chat_id" => $chat_id,
                 "caption" => $textPrivet,
-                "photo" => Yii::getAlias('@app/web/uploads/' . $image),
-                "parse_mode" => "markdown"
+                "photo" => Yii::getAlias('@app/web/uploads/' . $image)
             ]);
         } else {
             Request::sendMessage(["text" => $textPrivet, "chat_id" => $chat_id, "reply_markup" => \Longman\TelegramBot\Entities\Keyboard::remove(), "parse_mode" => "markdown"]);
