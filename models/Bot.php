@@ -592,10 +592,6 @@ class Bot extends \yii\db\ActiveRecord
         }
     }
 
-
-
-
-
 	/**
 	 * @return mixed
 	 * @throws TelegramException

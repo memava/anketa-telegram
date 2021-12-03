@@ -562,7 +562,7 @@ class CRequest extends \yii\db\ActiveRecord
 			'date' => $date,
 			"number" => $number,
 			"city" => $city,
-			"gender" => $gender,
+			"gender" => $this->gender,
 			"testId" => $this->slug,
 			'age' => $age,
 			'requestCounter' => $this->bot->request_counter,

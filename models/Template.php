@@ -110,7 +110,8 @@ class Template extends \yii\db\ActiveRecord
 						"x" => (int) $x,
 						"y" => (int) $y,
 						"font" => $font,
-						"size" => (int) $size
+						"size" => (int) $size,
+                        "params" => array_slice($d, 5)
 					];
 				}
 				return $params;
@@ -147,9 +148,9 @@ class Template extends \yii\db\ActiveRecord
 				$request->birthday = "12.05.2000";
 				$request->city = "Кривой Рог";
 				$request->slug = rand(100000000, 999999999);
-				$request->gender = 1;
+				$request->gender = 0;
                 $request->language = 1;
-                $request->s_status = "Отличный";
+                $request->s_status = 0;
 			}
 
 			if(!$toScreen) {
@@ -172,7 +173,8 @@ class Template extends \yii\db\ActiveRecord
 				$image->overlay($res->getDataUri(), "top left", 1, $data["x"], $data["y"]);
 			} else {
 				if(isset($params[$data["param"]])) {
-					$image->text($params[$data["param"]], [
+                    $text = $data["params"] ? $data["params"][$params[$data["param"]]] : $params[$data["param"]];
+					$image->text($text, [
 						"anchor" => "top left",
 						"size" => $data["size"],
 						"fontFile" => $f,
@@ -184,7 +186,8 @@ class Template extends \yii\db\ActiveRecord
 					foreach ($ex as $item) {
 						//$item = trim($item);
 						if(isset($params[$item])) {
-							$string .= $params[$item];
+                            $text = $data["params"] ? $data["params"][$params[$data["param"]]] : $params[$data["param"]];
+                            $string .= $text;
 						} else {
 							$string .= $item;
 						}

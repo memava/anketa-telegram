@@ -45,8 +45,8 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
-	const GENDER_MALE = 1;
-	const GENDER_FEMALE = 2;
+	const GENDER_MALE = 0;
+	const GENDER_FEMALE = 1;
 
 	const ROLE_USER = 1;
 	const ROLE_ADMIN = 2;
