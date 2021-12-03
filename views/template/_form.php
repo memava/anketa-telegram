@@ -61,6 +61,7 @@ use yii\widgets\ActiveForm;
                                 <b>параметр:Х:Y:font:size</b><br/>
                                 <b>параметр:Х:Y:font:size</b><br/>
                                 <b>параметр1,параметр2,свой текст:Х:Y:font:size</b><br/>
+                                <b>параметр1,параметр2,свой текст:Х:Y:font:size:доп1:доп2</b><br/>
                             </span>
                         </div>
                     </div>
