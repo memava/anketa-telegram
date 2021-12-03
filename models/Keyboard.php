@@ -134,16 +134,16 @@ class Keyboard extends \yii\db\ActiveRecord
         $kbd = [];
         switch ($lang) {
             case CRequest::LANGUAGE_RU:
-                $kbd[][] = ["text" => "Позитивный", "callback_data" => "/selectstatus Позитивный"];
-                $kbd[][] = ["text" => "Негативный", "callback_data" => "/selectstatus Негативный"];
+                $kbd[][] = ["text" => "Позитивный", "callback_data" => "/selectstatus 1"];
+                $kbd[][] = ["text" => "Негативный", "callback_data" => "/selectstatus 0"];
                 break;
             case CRequest::LANGUAGE_EN:
-                $kbd[][] = ["text" => "Positive", "callback_data" => "/selectstatus Positive"];
-                $kbd[][] = ["text" => "Negative", "callback_data" => "/selectstatus Negative"];
+                $kbd[][] = ["text" => "Positive", "callback_data" => "/selectstatus 1"];
+                $kbd[][] = ["text" => "Negative", "callback_data" => "/selectstatus 0"];
                 break;
             case CRequest::LANGUAGE_UA:
-                $kbd[][] = ["text" => "Виявлено", "callback_data" => "/selectstatus Виявлено"];
-                $kbd[][] = ["text" => "Не виявлено", "callback_data" => "/selectstatus Не виявлено"];
+                $kbd[][] = ["text" => "Виявлено", "callback_data" => "/selectstatus 1"];
+                $kbd[][] = ["text" => "Не виявлено", "callback_data" => "/selectstatus 0"];
                 break;
         }
         return $kbd;
