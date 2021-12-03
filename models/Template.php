@@ -184,9 +184,9 @@ class Template extends \yii\db\ActiveRecord
 				} else if($ex = explode(",", $data["param"])) {
 					$string = '';
 					foreach ($ex as $item) {
-						$item = trim($item);
-						if(isset($params[$item])) {
-                            $text = $data["params"] ? $data["params"][$params[$data["param"]]] : $params[$data["param"]];
+						//$item = trim($item);
+						if(isset($params[trim($item)])) {
+                            $text = $data["params"] ? $data["params"][$params[$item]] : $params[$item];
                             $string .= $text;
 						} else {
 							$string .= $item;
