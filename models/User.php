@@ -247,7 +247,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function generateRefLink()
 	{
-		$this->ref_link = Yii::$app->security->generateRandomString(16);
+		$this->ref_link = preg_replace('/[^a-zA-Z0-9]/', '', Yii::$app->security->generateRandomString(16));
 	}
 
 	/**
