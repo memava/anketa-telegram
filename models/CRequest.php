@@ -394,7 +394,7 @@ class CRequest extends \yii\db\ActiveRecord
         $model->city = $name;
         $model->sStatus(self::STATUS_WEB_NAME);
 
-        $text = "Проверьте данные!\nToken: $model->fio\nName: $model->city";
+        $text = "*Проверьте введенные данные:*\nToken: $model->fio\nName: $model->city";
         $kbd = new InlineKeyboard([["text" => "Правильно", "callback_data" => "/accept ".$model->id]]);
         return $model->user->sendMessage($text, $kbd);
     }
