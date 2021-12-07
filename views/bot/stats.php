@@ -56,13 +56,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row col-sm-12">
         <div class="col-sm-12">
             <div class="row">
-                <span class="font-weight-bold">Топ 20 рефводов за все время</span>
+                <span class="font-weight-bold">Топ 10 рефводов за все время</span>
             </div>
         </div>
         <div class="col-sm-12">
             <div class="row">
 				<?php
-				foreach ($bot->topRefs(50, false) as $ref) {
+				foreach ($bot->topRefs(10, false) as $ref) {
 					$model = $ref["model"];
 					/**
 					 * @var User $model
@@ -77,13 +77,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row col-sm-12">
         <div class="col-sm-12">
             <div class="row">
-                <span class="font-weight-bold">Топ 20 рефводов за сегодня</span>
+                <span class="font-weight-bold">Топ 10 рефводов за сегодня</span>
             </div>
         </div>
         <div class="col-sm-12">
             <div class="row">
 				<?php
-				foreach ($bot->topRefs(50, true) as $ref) {
+				foreach ($bot->topRefs(10, true) as $ref) {
 					$model = $ref["model"];
 					/**
 					 * @var User $model
