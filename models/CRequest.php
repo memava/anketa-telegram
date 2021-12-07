@@ -476,11 +476,11 @@ class CRequest extends \yii\db\ActiveRecord
 
 	/**
 	 * @param $user_id
-	 * @return CRequest[]
+	 * @return bool
 	 */
 	public static function isRequests($user_id)
 	{
-		return self::findAll(["user_id" => $user_id]);
+		return Transaction::isTransaction($user_id);
 	}
 
 	/**

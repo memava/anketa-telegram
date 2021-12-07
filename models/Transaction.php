@@ -263,4 +263,13 @@ class Transaction extends \yii\db\ActiveRecord
 		$this->status = self::STATUS_REJECT;
 		return $this->save(false);
 	}
+
+    /**
+     * @param $userId
+     * @return bool|int|string|null
+     */
+    public static function isTransaction($userId)
+    {
+        return self::find()->where(["user_id" => $userId])->andWhere("balance_after < balance_before")->count();
+    }
 }
