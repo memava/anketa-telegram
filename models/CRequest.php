@@ -355,8 +355,8 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->city = $city;
 		$model->sStatus(self::STATUS_CHECKING);
 
-		$text = "*Проверьте правильность введеных данных:*\n".
-			"ФИО: ".$model->fio."\n".
+		$text = "*Проверьте введенные данные:*\n".
+			"*ФИО:* ".$model->fio."\n".
 			"Дата рождения: ".$model->birthday."\n".
 			"Дата проведения запроса: ".$model->request_date."\n".
 			"Город проведения запроса: ".$model->city."\n";
