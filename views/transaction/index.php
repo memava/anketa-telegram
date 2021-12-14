@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return \app\models\Transaction::getStatuses()[$m->status];
             }, 'filter' => \app\models\Transaction::getStatuses()],
             'created_at:datetime',
-            //'updated_at',
+            'updated_at:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
