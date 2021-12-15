@@ -91,8 +91,8 @@ class CountryHelper
 				CRequest::LANGUAGE_EN,
 			],
 			self::COUNTRY_KAZAKHSTAN => [
-				CRequest::LANGUAGE_RU,
 				CRequest::LANGUAGE_UA,
+				CRequest::LANGUAGE_EN,
 			],
 			self::COUNTRY_BELARUS => [
 				CRequest::LANGUAGE_RU,
