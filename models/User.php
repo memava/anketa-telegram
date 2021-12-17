@@ -417,11 +417,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	public function balanceChanged(BalanceChangedEvent $event)
 	{
 		if($event->isIncrease()) {
-			$text = "Вам начислено $event->count запросов. Приятного пользования.";
+			$text = "Вам начислено $event->count запрос(-ов). Приятного пользования.";
 			$event->user->sendMessage($text, Keyboard::getMainKeyboard());
 
 			if($event->isExternalPayment()) {
-				$event->user->bot->sendFor(User::ROLE_ADMIN, "Получена оплата {$event->sum} рублей за {$event->count} запросов от @{$event->user->username} : {$event->user->name}");
+				$event->user->bot->sendFor(User::ROLE_ADMIN, "\xE2\x9C\x85 \xE2\x9C\x85 \xE2\x9C\x85 Получено {$event->sum} рублей за {$event->count} запросов от @{$event->user->username} : {$event->user->name} : [{$event->user->token}](tg://user?id={$event->user->token})");
 			}
 		}
 	}
