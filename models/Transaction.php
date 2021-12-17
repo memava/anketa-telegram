@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\events\BalanceChangedEvent;
+use Xpay\Crypt\CryptManager;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\StringHelper;
@@ -199,6 +200,28 @@ class Transaction extends \yii\db\ActiveRecord
 
 		return $this->link;
 	}
+
+    public function xpayPayment()
+    {
+        $privateKey = ''; // your private key
+        $publicKey = ''; // key that you've got from XPayua
+        $cryptManager = new CryptManager($privateKey, $publicKey);
+
+
+        $requestData = ['ID' => ''];
+
+        $partner = [
+            'PartnerToken' => 'TOKEN', // that you've got from XPayua
+            'OperationType' => 12345, // integer id of operation
+        ];
+
+        $data = [
+            'Partner' => $partner,
+            'Data' => $cryptManager->encrypt($requestData),
+            'KeyAES' => $cryptManager->getEncryptedAESKey(),
+            'Sign' => $cryptManager->getSignedKey(),
+        ];
+    }
 
 	/**
 	 * @param User $user

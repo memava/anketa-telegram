@@ -446,6 +446,9 @@ class CRequest extends \yii\db\ActiveRecord
 		$model = self::getActiveRequest($chat_id, $botUsername);
 		if(!$model) {
 			$user = User::findIdentityByAccessToken($chat_id, $botUsername);
+
+            if(!$user->canCreateNewRequest()) die;
+
 			$model = new self();
 			$model->user_id = $user->id;
 			$model->bot_id = $user->bot_id;

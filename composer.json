@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.3.0",
         "yiisoft/yii2": "~2.0.14",
@@ -27,7 +27,8 @@
         "rmrevin/yii2-fontawesome": "2.10.*",
         "ext-json": "*",
         "christian-riesen/base32": "^1.6",
-        "kartik-v/yii2-widget-fileinput": "@dev"
+        "kartik-v/yii2-widget-fileinput": "@dev",
+        "xpay-crypting/crypting": "dev-main"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

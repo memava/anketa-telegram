@@ -666,13 +666,14 @@ class Bot extends \yii\db\ActiveRecord
 	{
 		$isNewRecord = $this->isNewRecord;
 		if(parent::save($runValidation, $attributeNames)) {
-			if($isNewRecord) {
+            $this->setCountry_1($this->country_1);
+            $this->setCountry_2($this->country_2);
+            $this->setCountry_3($this->country_3);
+            $this->setCountry_4($this->country_4);
+            return true;
+            if($isNewRecord) {
 				return $this->webhook();
 			}
-			$this->setCountry_1($this->country_1);
-			$this->setCountry_2($this->country_2);
-			$this->setCountry_3($this->country_3);
-			$this->setCountry_4($this->country_4);
 		}
 		return false;
 	}
@@ -854,8 +855,8 @@ class Bot extends \yii\db\ActiveRecord
 	 */
 	public function getWebhookInfo()
 	{
-		$tg = new Telegram($this->token, $this->bot_name);
         try {
+            $tg = new Telegram($this->token, $this->bot_name);
             $info = Request::getWebhookInfo();
             return VarDumper::dumpAsString($info->getResult());
         } catch (TelegramException $e) {
