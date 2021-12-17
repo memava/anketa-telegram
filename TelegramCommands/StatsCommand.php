@@ -15,8 +15,10 @@ class StatsCommand extends UserCommand
 	{
 		if($this->isAdmin()) {
 			$bot = Bot::findByBotname($this->getMessage()->getBotUsername());
-			$text = "Всего подписчиков: $bot->subscribersCount
-Сегодня подписчиков: $bot->subscribersDayCount
+			$text = "*Всего подписчиков:* $bot->subscribersCount
+*Сегодня подписчиков:* $bot->subscribersDayCount
+Всего рефов: $bot->subscribersCount
+Сегодня рефов: $bot->subscribersDayCount
 Запросов всего: $bot->requestCount
 Запросов сегодня: $bot->requestDayCount
 Нажатия на оплату всего: $bot->clicksPayCount
