@@ -360,7 +360,7 @@ class CRequest extends \yii\db\ActiveRecord
 			"Дата рождения: ".$model->birthday."\n".
 			"Дата проведения запроса: ".$model->request_date."\n".
 			"Город проведения запроса: ".$model->city."\n";
-		$kbd = new InlineKeyboard([["text" => "Подтверждаю, все верно", "callback_data" => "/generate ".$model->id]], [["text" => "Ввести заново", "callback_data" => "/newrequest"]]);
+		$kbd = new InlineKeyboard([["text" => "\xE2\x9C\x85 Подтверждаю, все верно", "callback_data" => "/generate ".$model->id]], [["text" => "Ввести заново", "callback_data" => "/newrequest"]]);
 		return $model->user->sendMessage($text, $kbd);
 	}
 
@@ -395,7 +395,7 @@ class CRequest extends \yii\db\ActiveRecord
         $model->sStatus(self::STATUS_WEB_NAME);
 
         $text = "*Проверьте введенные данные:*\nToken: $model->fio\nName: $model->city";
-        $kbd = new InlineKeyboard([["text" => "Правильно", "callback_data" => "/accept ".$model->id]]);
+        $kbd = new InlineKeyboard([["text" => "\xE2\x9C\x85 Правильно", "callback_data" => "/accept ".$model->id]]);
         return $model->user->sendMessage($text, $kbd);
     }
 
@@ -588,7 +588,7 @@ class CRequest extends \yii\db\ActiveRecord
 	public function made(CRequestMadeEvent $event)
 	{
 //		$params = $event->request->getParams();
-		$text = "Запрос #{$event->request->bot->request_counter}\n".
+		$text = "*Запрос #{$event->request->bot->request_counter}*\n".
 			"ФИО: {$event->request->fio}\n".
 			"Дата рождения: {$event->request->birthday}\n".
 			"Дата запроса: {$event->request->request_date}\n".
