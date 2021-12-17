@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }, 'filter' => \app\models\Bot::getPaymentSystems()],
             ["attribute" => "bott", 'value' => 'user.bot.name', "filter" => \yii\helpers\ArrayHelper::map(\app\models\Bot::find()->all(), "id", "name")],
             ['attribute' => 'token', 'value' => function($m) {
-                return Html::a($m->user->token, "user/update?id=".$m->user->id);
+                return Html::a($m->user->token, "/user/update?id=".$m->user->id);
             }, 'format' => 'raw'],
             ["attribute" => "user_id", "value" => "user.username"],
             'amount',
