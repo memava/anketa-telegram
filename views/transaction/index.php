@@ -16,7 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    
+<?= Html::a('Оплаченые', ['/transaction/index?TransactionSearch%5Bid%5D=&TransactionSearch%5Bpayment_system%5D=&TransactionSearch%5Bbott%5D=&TransactionSearch%5Btoken%5D=&TransactionSearch%5Buser_id%5D=&TransactionSearch%5Bsum%5D=&TransactionSearch%5Bstatus%5D=10&TransactionSearch%5Bcreated_at%5D=&TransactionSearch%5Bupdated_at%5D=&sort=-updated_at'], ['class'=>'btn btn-primary']) ?>
+    
+    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
