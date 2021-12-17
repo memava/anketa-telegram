@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return Html::a($m->user->token, "/user/update?id=".$m->user->id);
             }, 'format' => 'raw'],
             ["attribute" => "user_id", "value" => "user.username"],
-            ["attribute" => "Страна", "value" => "user.country"],
+            ["attribute" => "country", "value" => "user.country", 'label' => 'Страна', 'filter' => \app\helpers\CountryHelper::getCountries()],
             'amount',
             'sum',
             //'currency',
