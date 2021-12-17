@@ -21,8 +21,8 @@ class StatsCommand extends UserCommand
 Сегодня рефов: $bot->subscribersDayCount
 Запросов всего: $bot->requestCount
 Запросов сегодня: $bot->requestDayCount
-Нажатия на оплату всего: $bot->clicksPayCount
-Нажатия на оплату за день: $bot->clicksPayDayCount ";
+Клики на оплату всего: $bot->clicksPayCount
+Клики на оплату сегодня: $bot->clicksPayDayCount ";
 			return $this->replyToChat($text);
 		}
 		return Request::emptyResponse();
