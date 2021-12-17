@@ -670,7 +670,6 @@ class Bot extends \yii\db\ActiveRecord
             $this->setCountry_2($this->country_2);
             $this->setCountry_3($this->country_3);
             $this->setCountry_4($this->country_4);
-            return true;
             if($isNewRecord) {
 				return $this->webhook();
 			}
