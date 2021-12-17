@@ -19,10 +19,6 @@ class StatsCommand extends UserCommand
 Сегодня подписчиков: $bot->subscribersDayCount
 Запросов всего: $bot->requestCount
 Запросов сегодня: $bot->requestDayCount
-/** 
-* Нажатия на донат всего: $bot->clicksDonateCount
-* Нажатия на донат сегодня: $bot->clicksDonateDayCount
-*/
 Нажатия на оплату всего: $bot->clicksPayCount
 Нажатия на оплату за день: $bot->clicksPayDayCount ";
 			return $this->replyToChat($text);
