@@ -95,6 +95,9 @@ class CallbackqueryCommand extends SystemCommand
 				case 'donate':
 					Bot::payment($chat_id, $data, $this->getCallbackQuery()->getBotUsername());
 					break;
+                case 'profile':
+					User::myProfile($chat_id, $this->getCallbackQuery()->getBotUsername());
+					break;
 				default:
                     CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
