@@ -25,6 +25,7 @@ use app\models\CRequest;
 use app\models\User;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Request;
 
 class CallbackqueryCommand extends SystemCommand
 {
@@ -103,6 +104,7 @@ class CallbackqueryCommand extends SystemCommand
 					break;
 			}
 		} else {
+            Request::sendMessage(["chat_id" => $chat_id, "text" => 'test']);
             CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 		}
 	}
