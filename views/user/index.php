@@ -33,9 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             'name',
             //'gender',
-            //'country',
-            'ref_id',
-            'ref_link',
+            'country',
+            //'ref_id',
+            //'ref_link',
             [
                 'attribute' => 'role',
                 'filter' => \app\models\User::getRoles(),
