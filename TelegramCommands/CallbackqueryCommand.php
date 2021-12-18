@@ -100,11 +100,11 @@ class CallbackqueryCommand extends SystemCommand
 					User::myProfile($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
 				default:
+                    Request::sendMessage(["chat_id" => $chat_id, "text" => 'test']);
                     CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
 			}
 		} else {
-            Request::sendMessage(["chat_id" => $chat_id, "text" => 'test']);
             CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 		}
 	}
