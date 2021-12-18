@@ -10,7 +10,9 @@ use app\helpers\CountryHelper;
 use app\helpers\KeyboardHelper;
 use app\models\Bot;
 use app\models\BotCountries;
+use app\models\Config;
 use app\models\CRequest;
+use app\models\Keyboard;
 use app\models\User;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -78,6 +80,9 @@ class GenericmessageCommand extends UserCommand
 				break;
 			case KeyboardHelper::BTN_MAIN_MENU:
 				return Bot::mainMenu($chat_id);
+				break;
+            case KeyboardHelper::BTN_FAQ:
+				return Request::sendMessage(["chat_id" => $chat_id, "text" => Config::get(Config::VAR_TEXT_FAQ), "parse_mode" => "markdown", "reply_markup" => Keyboard::getMainKeyboard()]);
 				break;
 			case KeyboardHelper::BTN_CHANGE_COUNTRY:
 				$countries = BotCountries::findAll(["bot_id" => User::findIdentityByAccessToken($chat_id, $this->getMessage()->getBotUsername())->bot_id]);

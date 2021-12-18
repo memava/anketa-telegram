@@ -78,9 +78,9 @@ class Keyboard extends \yii\db\ActiveRecord
 	public static function getMainKeyboard($donate = true)
 	{
 		if(!$donate) {
-			$kbd = new \Longman\TelegramBot\Entities\Keyboard(["text" => KeyboardHelper::BTN_CREATE_REQUEST], ["text" => KeyboardHelper::BTN_MY_PROFILE]);
+			$kbd = new \Longman\TelegramBot\Entities\Keyboard(["text" => KeyboardHelper::BTN_CREATE_REQUEST], ["text" => KeyboardHelper::BTN_MY_PROFILE], ["text" => KeyboardHelper::BTN_FAQ]);
 		} else {
-			$kbd = new \Longman\TelegramBot\Entities\Keyboard(["text" => KeyboardHelper::BTN_CREATE_REQUEST], ["text" => KeyboardHelper::BTN_MY_PROFILE], ["text" => KeyboardHelper::BTN_DONATE]);
+			$kbd = new \Longman\TelegramBot\Entities\Keyboard(["text" => KeyboardHelper::BTN_CREATE_REQUEST], ["text" => KeyboardHelper::BTN_MY_PROFILE], ["text" => KeyboardHelper::BTN_FAQ], ["text" => KeyboardHelper::BTN_DONATE]);
 
 		}
 		$kbd->setResizeKeyboard(true);

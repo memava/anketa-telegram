@@ -13,13 +13,15 @@ class KeyboardHelper
 	const BTN_CHANGE_COUNTRY = "Изменить страну";
 	const BTN_DONATE = "\xF0\x9F\x92\xB3 Пополнить балланс";
 	const BTN_MAIN_MENU = "\xF0\x9F\x8F\xA0 Главное меню";
+	const BTN_FAQ = "Частые вопросы";
 
 	const BUTTONS = [
 		self::BTN_MY_PROFILE,
 		self::BTN_CREATE_REQUEST,
 		self::BTN_CHANGE_COUNTRY,
 		self::BTN_DONATE,
-		self::BTN_MAIN_MENU
+		self::BTN_MAIN_MENU,
+        self::BTN_FAQ
 	];
 
 	/**
