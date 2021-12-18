@@ -99,6 +99,9 @@ class CallbackqueryCommand extends SystemCommand
                 case 'profile':
 					User::myProfile($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
+                case 'mainmenu':
+					Bot::mainMenu($chat_id);
+					break;
 				default:
                     CRequest::newRequest($chat_id, $this->getCallbackQuery()->getBotUsername());
 					break;
