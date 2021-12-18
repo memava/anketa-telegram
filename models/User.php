@@ -350,12 +350,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	public static function myProfile($chat_id, $botUsername)
 	{
 		$user = self::findIdentityByAccessToken($chat_id, $botUsername);
-		$text = "**Моя страна:** ".CountryHelper::getCountries()[$user->country]."\n".
-			"**Приглашено друзей:** {$user->refCount}\n".
-			"**Доступно запросов:** ".$user->available_requests."\n".
-			"**Ссылка для приглашения друзей:** ".$user->getRefLink();
+		$text = "*Моя страна:* ".CountryHelper::getCountries()[$user->country]."\n".
+			"*Приглашено друзей:* $user->refCount\n".
+			"*Доступно запросов:* ".$user->available_requests."\n".
+			"*Ссылка для приглашения друзей:* ".$user->getRefLink();
 		$kbd = new \Longman\TelegramBot\Entities\Keyboard([KeyboardHelper::BTN_MAIN_MENU], [KeyboardHelper::BTN_CHANGE_COUNTRY]);
-		$text = str_replace(explode(" ", "* _ { } + !"), ["\*", "\_", "\{", "\}", "\+", "\!"], $text);
+		$text = str_replace(explode(" ", "_ { } + !"), ["\_", "\{", "\}", "\+", "\!"], $text);
 		$kbd->setResizeKeyboard(true);
 		return $user->sendMessage($text, $kbd);
 	}
