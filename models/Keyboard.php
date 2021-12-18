@@ -110,7 +110,8 @@ class Keyboard extends \yii\db\ActiveRecord
             }
 		}
 		if($mainMenu) {
-			$kbd[][0] = ["text" => KeyboardHelper::BTN_MAIN_MENU, "callback_data" => "/mainmenu"];
+			$kbd[][] = ["text" => KeyboardHelper::BTN_MAIN_MENU, "callback_data" => "/mainmenu"];
+			$kbd[][] = ["text" => KeyboardHelper::BTN_MY_PROFILE, "callback_data" => "/profile"];
 		}
 		return new InlineKeyboard(...$kbd);
 	}

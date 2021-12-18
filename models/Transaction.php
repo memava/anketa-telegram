@@ -211,16 +211,18 @@ class Transaction extends \yii\db\ActiveRecord
         $requestData = ['ID' => ''];
 
         $partner = [
-            'PartnerToken' => 'TOKEN', // that you've got from XPayua
+            'PartnerToken' => 'a5be4dab-4a19-4281-99da-ab70b252759d',
             'OperationType' => 12345, // integer id of operation
         ];
 
         $data = [
             'Partner' => $partner,
-            'Data' => $cryptManager->encrypt($requestData),
+            'Data' => $cryptManager->encrypt(json_encode($requestData)),
             'KeyAES' => $cryptManager->getEncryptedAESKey(),
             'Sign' => $cryptManager->getSignedKey(),
         ];
+
+        //return
     }
 
 	/**
