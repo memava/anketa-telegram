@@ -70,7 +70,7 @@ class CallbackqueryCommand extends SystemCommand
 	 */
 	private function execCommand()
 	{
-		preg_match('/^\/(\w+)(\s+|)(.+)$/', $this->getCallbackQuery()->getData(), $out);
+		preg_match('/^\/(\w+)(\s+|)(.+|)$/', $this->getCallbackQuery()->getData(), $out);
 		$chat_id = $this->getCallbackQuery()->getFrom()->getId();
 		if($out) {
 			$data = $out[3];
