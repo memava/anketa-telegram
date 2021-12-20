@@ -160,6 +160,7 @@ class Notification extends \yii\db\ActiveRecord
     public function processTypeStart()
     {
         $users = $this->getUsers(self::TYPE_START);
+        print_r($users);
         return $this->sendMessage($users);
     }
 
