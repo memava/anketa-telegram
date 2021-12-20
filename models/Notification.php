@@ -221,6 +221,7 @@ class Notification extends \yii\db\ActiveRecord
             ->andWhere([">=", "`user`.`created_at`", $min])
             ->andWhere(["<=", "`user`.`created_at`", $max])
             ->andWhere($conditionForBot)
+            ->distinct()
             ->all());
         die;
 
