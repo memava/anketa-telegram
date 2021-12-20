@@ -56,8 +56,15 @@ use yii\web\UploadedFile;
  *
  * @property-read string $webhookInfo
  * @property-read string $reserveLink
+ * @property-read mixed $todayRef
+ * @property-read mixed $allRef
+ * @property bool $country_1
+ * @property bool $country_2
+ * @property bool $country_3
+ * @property bool $country_4
  *
  * @property-read BotCountries[] $countries
+ * @property-read Notification[] $notifications
  * @property-read User $user
  */
 class Bot extends \yii\db\ActiveRecord
@@ -201,8 +208,10 @@ class Bot extends \yii\db\ActiveRecord
 	public static function donate($chat_id, $botName)
 	{
 		$bot = self::findByBotname($botName)->id;
+        $user = User::findOne(["token" => $chat_id, "bot_id" => $bot]);
 		$keyboard = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $bot);
-		return Request::sendMessage(["chat_id" => $chat_id, "text" => "*Пополните балланс любым удобным способом:*", "reply_markup" => $keyboard]);
+        UserAction::createInline($user->id, UserAction::TYPE_CLICK_ON_DONATE);
+        return $user->sendMessage("*Пополните балланс любым удобным способом:*", $keyboard);
 	}
 
 	/**
@@ -921,4 +930,13 @@ class Bot extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ["token" => $this->user_id]);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotifications()
+    {
+        return $this->hasMany(Notification::class, ["bot_id" => "id"]);
+    }
+
 }

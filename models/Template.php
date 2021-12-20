@@ -83,7 +83,7 @@ class Template extends \yii\db\ActiveRecord
 		if(!$this->uTemplate) return true;
 
 		$name = $this->slug."_template.".$this->uTemplate->extension;
-		$this->uTemplate->saveAs(Yii::getAlias('@app/web/uploads/'.$name));
+		$this->uTemplate->saveAs(Yii::getAlias('@app/web/uploads/' . $name . '.' . $this->uTemplate->extension));
 		$this->template = $name;
 		return true;
 	}
@@ -186,7 +186,7 @@ class Template extends \yii\db\ActiveRecord
 					foreach ($ex as $item) {
 						//$item = trim($item);
 						if(isset($params[trim($item)])) {
-                            $text = $data["params"] ? $data["params"][$params[trim($item)]] : $params[trim($item)];
+                            $text = $data["params"] ? $data["params"][$params[$item]] : $params[$item];
                             $string .= $text;
 						} else {
 							$string .= $item;

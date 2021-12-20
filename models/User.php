@@ -42,6 +42,10 @@ use yii\web\IdentityInterface;
  * @property-read Bot $bot
  * @property-read User $ref
  * @property-read User $firstRef
+ * @property-read string $refLink
+ * @property-read null|string $authKey
+ * @property-read UserAction[] $userAction
+ * @property-read Transaction[] $transactions
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -501,6 +505,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 		return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_WEB]);
 	}
 
+    /**
+     * @return $this
+     */
 	public function getFirstRef()
 	{
 		if($r = $this->ref) {
@@ -509,5 +516,21 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 			return $this;
 		}
 	}
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransactions()
+    {
+        return $this->hasMany(Transaction::class, ["user_id" => "id"]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserAction()
+    {
+        return $this->hasMany(UserAction::class, ["user_id" => "id"]);
+    }
 
 }

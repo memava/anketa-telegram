@@ -588,7 +588,7 @@ class CRequest extends \yii\db\ActiveRecord
 	public function made(CRequestMadeEvent $event)
 	{
 //		$params = $event->request->getParams();
-		$text = "Запрос #{$event->request->bot->request_counter}\n".
+		$text = "*Запрос #{$event->request->bot->request_counter}*\n".
 			"ФИО: {$event->request->fio}\n".
 			"Дата рождения: {$event->request->birthday}\n".
 			"Дата запроса: {$event->request->request_date}\n".

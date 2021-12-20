@@ -10,6 +10,7 @@ use app\helpers\CountryHelper;
 use app\helpers\KeyboardHelper;
 use app\models\Bot;
 use app\models\CRequest;
+use app\models\Notification;
 use app\models\User;
 use app\models\Config;
 use Longman\TelegramBot\Commands\UserCommand;
@@ -18,6 +19,7 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
+use yii\helpers\Console;
 
 class BotController extends \yii\console\Controller
 {
@@ -46,13 +48,28 @@ class BotController extends \yii\console\Controller
 
     public function actionIndex()
     {
-         $this->bot();
 
     }
 
-
-
-
-
+    public function actionNotify()
+    {
+        $notifications = Notification::findAll(["bot_id" => 0]);
+        $bots = Bot::find()->all();
+        Console::output("Notification start");
+        $processedBots = [];
+        foreach ($bots as $bot) {
+            if($bot->notifications) {
+                foreach ($bot->notifications as $notification) {
+                    Console::output("Notifications for bot $bot->id, notification: $notification->id");
+                    print_r($notification->processAll($processedBots));
+                }
+                $processedBots[] = $bot->id;
+            }
+        }
+        foreach ($notifications as $notification) {
+            Console::output("Default notification $notification->id");
+            print_r($notification->processAll($processedBots));
+        }
+    }
 
 }

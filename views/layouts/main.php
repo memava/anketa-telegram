@@ -46,8 +46,8 @@ AppAsset::register($this);
 			['label' => 'Клавиатура', 'url' => ['/keyboard/index']],
 			['label' => 'Запросы', 'url' => ['/crequest/index']],
 			['label' => 'Транзакции', 'url' => ['/transaction/index']],
-			['label' => 'Конфиг', 'url' => ['/config/index']],
-			['label' => 'Статистика', 'url' => ['/stats/index']],
+			['label' => 'Уведомления', 'url' => ['/notification/index']],
+            ['label' => 'Конфиг', 'url' => ['/config/index']],
            '<li>'
 			   . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
 			   . Html::submitButton(

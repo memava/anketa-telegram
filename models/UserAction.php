@@ -43,7 +43,7 @@ class UserAction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bot_id', 'user_id', 'type', 'created_at', 'updated_at'], 'integer'],
+            [['user_id', 'type', 'created_at', 'updated_at'], 'integer'],
         ];
     }
 
@@ -54,11 +54,22 @@ class UserAction extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'bot_id' => 'Bot ID',
             'user_id' => 'User ID',
             'type' => 'Type',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @param $user_id
+     * @param $type
+     */
+    public static function createInline($user_id, $type)
+    {
+        $model = new self();
+        $model->user_id = $user_id;
+        $model->type = $type;
+        $model->save(false);
     }
 }
