@@ -10,6 +10,7 @@ use app\helpers\CountryHelper;
 use app\helpers\KeyboardHelper;
 use app\models\Bot;
 use app\models\CRequest;
+use app\models\Keyboard;
 use app\models\Notification;
 use app\models\User;
 use app\models\Config;
@@ -70,6 +71,12 @@ class BotController extends \yii\console\Controller
             Console::output("Default notification $notification->id");
             print_r($notification->processAll($processedBots));
         }
+    }
+
+    public function actionTest()
+    {
+        $u = User::findOne(45166);
+        $u->sendMessage("test", Keyboard::getMainKeyboard());
     }
 
 }
