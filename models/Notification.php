@@ -75,7 +75,7 @@ class Notification extends \yii\db\ActiveRecord
         return [
             [['type', 'condition_type', 'condition_value', 'created_at', 'updated_at', 'bot_id'], 'integer'],
             [['text'], 'string', 'max' => 255],
-            [["condition_value"], "integer", "min" => 600]
+            [["condition_value"], "integer", "min" => 300]
         ];
     }
 
