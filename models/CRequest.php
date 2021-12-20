@@ -598,7 +598,7 @@ class CRequest extends \yii\db\ActiveRecord
 			($event->user->ref ? " / Рефвод @{$event->user->ref->username}\n" : "\n").
 			"Всего запросов: {$event->user->requestCount}\n".
 			"Привел реф. {$event->user->refCount} / Оплачено: {$event->user->paidRequestCount} / Сумма оплат: {$event->user->paidSumCount} / Начислено: {$event->user->addedRequestCount}";
-		$text = str_replace(explode(" ", "* _ { } + !"), ["\*", "\_", "\{", "\}", "\+", "\!"], $text);
+		$text = str_replace(explode(" ", "_ { } + !"), ["\_", "\{", "\}", "\+", "\!"], $text);
 		$event->user->bot->sendFor(User::ROLE_ADMIN, $text);
 
 		if($event->templates) {
