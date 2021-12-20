@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'text')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'text')->textarea(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'bot_id')->dropDownList(\app\models\Notification::getBots()) ?>
 
