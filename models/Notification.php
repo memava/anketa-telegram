@@ -216,10 +216,14 @@ class Notification extends \yii\db\ActiveRecord
         $min = $this->_time - $this->condition_value - 20;
         $max = $min + 20;
         $conditionForBot = $this->_exclude ? ["not in", "`user`.bot_id", $this->_exclude] : [">", "`user`.bot_id", 0];
-        print_r(User::findBySql("SELECT `u`.*, count(`t`.id) as c FROM `user` u LEFT JOIN `transaction` t ON `u`.id = `t`.user_id GROUP BY user_id HAVING `c` = 1")
+        print_r(User::find()
+            ->joinWith('transactions')
+            ->select('count(`transaction`.id) as c')
             ->andWhere([">=", "`user`.`created_at`", $min])
             ->andWhere(["<=", "`user`.`created_at`", $max])
             ->andWhere($conditionForBot)
+            ->groupBy('user_id')
+            ->having(["c" => 1])
             ->all());
         die;
 
