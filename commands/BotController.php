@@ -75,8 +75,7 @@ class BotController extends \yii\console\Controller
 
     public function actionTest()
     {
-        $u = User::findOne(45166);
-        $u->sendMessage("test", Keyboard::getMainKeyboard());
+
     }
 
 }
