@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Console;
 
 /**
  * This is the model class for table "notification".
@@ -145,6 +146,7 @@ class Notification extends \yii\db\ActiveRecord
     {
         $this->_time = time();
         $this->_exclude = $exclude;
+        Console::output("Process all");
 
         switch ($this->type) {
             case self::TYPE_START: return $this->processTypeStart();
