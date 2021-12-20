@@ -11,7 +11,9 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\console\Application;
 use yii\db\Expression;
+use yii\helpers\Console;
 use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 
@@ -440,6 +442,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	{
 		$tg = new Telegram($this->bot->token, $this->bot->bot_name);
 		$r = Request::sendMessage(["chat_id" => $this->token, "text" => $text, "reply_markup" => $reply, "parse_mode" => "markdown"]);
+        if(Yii::$app instanceof Application) {
+            Console::output("Send message for $this->token ($text)");
+        }
 		//file_put_contents(Yii::getAlias("@app/log"), VarDumper::dumpAsString($r).PHP_EOL, FILE_APPEND);
 		return $r;
 	}
