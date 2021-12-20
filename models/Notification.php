@@ -214,7 +214,7 @@ class Notification extends \yii\db\ActiveRecord
     private function getUsers($type)
     {
         $min = $this->_time - $this->condition_value - 20;
-        $max = $min + 25;
+        $max = $min + round($this->condition_value / 2);
         $conditionForBot = $this->_exclude ? ["not in", "`user`.bot_id", $this->_exclude] : $this->bot_id ? ["`user`.`bot_id`" => $this->bot_id] : [">", "`user`.bot_id", 0];
 
         switch ($type) {
