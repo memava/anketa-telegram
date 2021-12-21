@@ -234,7 +234,7 @@ class Bot extends \yii\db\ActiveRecord
 		if($user->country == CountryHelper::COUNTRY_UKRAINE) {
 			$link = Transaction::changeBalance($user, $ex[2], $ex[1], $ex[0],Transaction::TYPE_PAYMENT, Transaction::CURRENCY_UAH);
 		} else {
-			$link = Transaction::changeBalance($user, $ex[2], $ex[0], $ex[0],Transaction::TYPE_PAYMENT, Transaction::CURRENCY_RUB);
+			$link = Transaction::changeBalance($user, $ex[2], $ex[1], $ex[0],Transaction::TYPE_PAYMENT, Transaction::CURRENCY_RUB);
 		}
 
 		if($user->bot->payment_system == Bot::PAYMENT_QIWI) {

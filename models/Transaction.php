@@ -257,6 +257,7 @@ class Transaction extends \yii\db\ActiveRecord
         $link_qiwi = $this->makeLinkQiwi();
         $link_epay = $this->makeLinkEpay();
         $link_global24 = $this->makeLinkGlobal();
+
         $link_xpay = $this->makeLinkXpay();
 
         $this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi, 'link_global24' => $link_global24, 'link_xpay' => $link_xpay]);
