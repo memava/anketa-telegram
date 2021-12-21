@@ -225,7 +225,7 @@ class Transaction extends \yii\db\ActiveRecord
             "PaymentInfo" => [
                 [
                     "Caption" => "Назначение",
-                    "Value" => "Оплата за $this->amount запросов"
+                    "Value" => "Оплата за запросы: $this->amount шт."
                 ]
             ]
         ];
