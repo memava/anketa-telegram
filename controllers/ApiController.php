@@ -78,7 +78,9 @@ class ApiController extends Controller
 			return $this->qiwi();
 		} else if($id == Bot::PAYMENT_EPAY) {
 			return $this->epay();
-		}
+		} else if($id == Bot::PAYMENT_XPAY) {
+            return $this->renderPartial($this->xpay());
+        }
 	}
 
 	/**
@@ -119,6 +121,25 @@ class ApiController extends Controller
 		    return $transaction->reject();
         }
 	}
+
+    private function xpay()
+    {
+        $data = \Yii::$app->request->get();
+        if($data["command"] == "pay") {
+            if(isset($data["txn_id_own"]) && $data["txn_id_own"]) {
+                $ex = explode("_", $data["txn_id_own"]);
+                $transaction = Transaction::findOne($ex[0]);
+                $transaction->accept();
+                $data_to_return = [
+                    "txn_id" => (string) $data["txn_id"],
+                    "result" => "10",
+                    "message" => "Done",
+                    "txn_date" => date("YmdHis")
+                ];
+                return json_encode($data_to_return);
+            }
+        }
+    }
 
 	public function actionWebhoook()
 	{

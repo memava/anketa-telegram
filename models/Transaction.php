@@ -219,6 +219,7 @@ class Transaction extends \yii\db\ActiveRecord
         $requestData = [
             "Email" => Config::get(Config::VAR_XPAY_EMAIL_FOR_PAYMENT),
             "PaymentSum" => $this->sum_uah * 100,
+            "CallBackURL" => Url::to(["api/payment", "id" => Bot::PAYMENT_XPAY], "https"),
             "Transaction" => [
                 "TransactionID" => (string) $this->unique_id . "_" . $this->sum_uah
             ],
