@@ -77,6 +77,10 @@ class Bot extends \yii\db\ActiveRecord
 	const PAYMENT_QIWI_EPAY = 3;
 	const PAYMENT_GLOBAL24 = 4;
 	const PAYMENT_GLOBAL24_EPAY = 5;
+    const PAYMENT_XPAY = 6;
+    const PAYMENT_XPAY_GLOBAL24 = 7;
+    const PAYMENT_XPAY_EPAY = 8;
+    const PAYMENT_XPAY_GLOBAL24_EPAY = 9;
 
 	const TYPE_NORMAL = 1;
 	const TYPE_WEBMASTER = 2;
@@ -187,6 +191,10 @@ class Bot extends \yii\db\ActiveRecord
 			self::PAYMENT_QIWI_EPAY => "Qiwi + Epay",
             self::PAYMENT_GLOBAL24 => "Global24",
             self::PAYMENT_GLOBAL24_EPAY => "Global24 + Epay",
+            self::PAYMENT_XPAY => "XPAY",
+            self::PAYMENT_XPAY_EPAY => "XPAY + Epay",
+            self::PAYMENT_XPAY_GLOBAL24 => "Xpay + global24",
+            self::PAYMENT_XPAY_GLOBAL24_EPAY => "Xpay + global24 + epay"
 		];
 	}
 
@@ -238,9 +246,21 @@ class Bot extends \yii\db\ActiveRecord
 			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24) {
             $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
-        } else {
+        } else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24_EPAY) {
             $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_global24"]];
             $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+        } else if($user->bot->payment_system == Bot::PAYMENT_XPAY) {
+            $btns[][0] = ["text" => "Способ 1: Visa/MasterCard", "url" => $link["link_xpay"]];
+        } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_GLOBAL24) {
+            $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
+            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+        } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_EPAY) {
+            $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
+            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+        } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_GLOBAL24_EPAY) {
+            $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
+            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_global24"]];
+            $btns[][0] = ["text" => "Способ 3: Visa/MasterCard", "url" => $link["link_epay"]];
         }
 		$kbd = new InlineKeyboard(...$btns);
 		return Request::sendMessage(["chat_id" => $chat_id, "text" => "Счет сформирован. Произведите оплату и она мгновенно поступит в бот:", "reply_markup" => $kbd]);

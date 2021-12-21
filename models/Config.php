@@ -64,6 +64,11 @@ class Config extends \yii\db\ActiveRecord
 
     const VAR_TEXT_FAQ = "text_faq";
 
+    const VAR_XPAY_OUR_PRIVATE_KEY = "xpay_our_private_key";
+    const VAR_XPAY_THEIR_PUBLIC_KEY = "xpay_their_public_key";
+    const VAR_XPAY_PARTNER_TOKEN = "xpay_partner_token";
+    const VAR_XPAY_EMAIL_FOR_PAYMENT = "xpay_email_for_payment";
+
     //const VAR_DEFAULT_START_TEXT = "default_start_text";
 
     public $uFile;

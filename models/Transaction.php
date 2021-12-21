@@ -3,7 +3,7 @@
 namespace app\models;
 
 use app\events\BalanceChangedEvent;
-use Xpay\Crypt\CryptManager;
+use GuzzleHttp\Client;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\StringHelper;
@@ -160,59 +160,79 @@ class Transaction extends \yii\db\ActiveRecord
 		return $this->hasOne(Bot::class, ["id" => "user.bot_id"]);
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getPaymentLink()
-	{
-		//if(!$this->link) {
-			$currency = $this->currency == self::CURRENCY_UAH ? "UAH" : "RUB";
-			$params = [
-				'publicKey' => Config::get(Config::VAR_QIWI_PUBLIC_KEY),
-				'amount' => $this->sum,
-				'billId' => $this->id,
-				'currency' => $currency,
-			];
-
-			Yii::$app->qiwi->key = Config::get(Config::VAR_QIWI_PRIVATE_KEY);
-			$link_qiwi = Yii::$app->qiwi->createPaymentForm($params);
-
-            $ex = explode(".", Yii::$app->request->hostName);
-            $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
-			$link_epay = "https://donate.".$domain."/transaction/donate?d=".$this->unique_id;
-
-
-
-			$data = [
-			    "walletId" => Config::get(Config::VAR_GLOBAL24_KEY),
-                "cardAmount" => $this->sum_uah * 100,
-                "lang" => "ru",
-                "callbackUrl" => "https://donate.".$domain."/transaction/success?d=".$this->unique_id,
-                "quittanceDest" => "noemail@gmail.com",
-                "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)",
-                "blocked" => 1
-            ];
-			$link_global24 = "https://global24.pro/wid/c2w/?".http_build_query($data);
-
-			$this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi, 'link_global24' => $link_global24]);
-			$this->save(false);
-		//}
-
-		return $this->link;
-	}
-
-    public function xpayPayment()
+    /**
+     * @return mixed
+     */
+    private function makeLinkQiwi()
     {
-        $privateKey = ''; // your private key
-        $publicKey = ''; // key that you've got from XPayua
+        $currency = $this->currency == self::CURRENCY_UAH ? "UAH" : "RUB";
+        $params = [
+            'publicKey' => Config::get(Config::VAR_QIWI_PUBLIC_KEY),
+            'amount' => $this->sum,
+            'billId' => $this->id,
+            'currency' => $currency,
+        ];
+
+        Yii::$app->qiwi->key = Config::get(Config::VAR_QIWI_PRIVATE_KEY);
+        return Yii::$app->qiwi->createPaymentForm($params);
+    }
+
+    /**
+     * @return string
+     */
+    private function makeLinkEpay()
+    {
+        $ex = explode(".", Yii::$app->request->hostName);
+        $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+        return "https://donate.".$domain."/transaction/donate?d=".$this->unique_id;
+    }
+
+    /**
+     * @return string
+     */
+    private function makeLinkGlobal()
+    {
+        $ex = explode(".", Yii::$app->request->hostName);
+        $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+        $data = [
+            "walletId" => Config::get(Config::VAR_GLOBAL24_KEY),
+            "cardAmount" => $this->sum_uah * 100,
+            "lang" => "ru",
+            "callbackUrl" => "https://donate.".$domain."/transaction/success?d=".$this->unique_id,
+            "quittanceDest" => "noemail@gmail.com",
+            "comment" => "Оплата {$this->sum_uah} грн ($this->unique_id)",
+            "blocked" => 1
+        ];
+        return "https://global24.pro/wid/c2w/?".http_build_query($data);
+    }
+
+    /**
+     * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function makeLinkXpay()
+    {
+        $privateKey = Config::get(Config::VAR_XPAY_OUR_PRIVATE_KEY);
+        $publicKey = Config::get(Config::VAR_XPAY_THEIR_PUBLIC_KEY);
         $cryptManager = new CryptManager($privateKey, $publicKey);
 
-
-        $requestData = ['ID' => ''];
+        $requestData = [
+            "Email" => Config::get(Config::VAR_XPAY_EMAIL_FOR_PAYMENT),
+            "PaymentSum" => $this->sum_uah * 100,
+            "Transaction" => [
+                "TransactionID" => (string) $this->unique_id
+            ],
+            "PaymentInfo" => [
+                [
+                    "Caption" => "Назначение",
+                    "Value" => "Оплата за $this->amount запросов"
+                ]
+            ]
+        ];
 
         $partner = [
-            'PartnerToken' => 'a5be4dab-4a19-4281-99da-ab70b252759d',
-            'OperationType' => 12345, // integer id of operation
+            'PartnerToken' => Config::get(Config::VAR_XPAY_PARTNER_TOKEN),
+            'OperationType' => 10005,
         ];
 
         $data = [
@@ -222,8 +242,27 @@ class Transaction extends \yii\db\ActiveRecord
             'Sign' => $cryptManager->getSignedKey(),
         ];
 
-        //return
+        $client = new Client();
+        $post = $client->post( "https://stage-papi.xpay.com.ua:488/xpay", ["body" => json_encode($data)]);
+        $response = (string) $post->getBody();
+        return json_decode($response, true)["Data"]["URI"];
     }
+
+	/**
+	 * @return string
+	 */
+	public function getPaymentLink()
+	{
+        $link_qiwi = $this->makeLinkQiwi();
+        $link_epay = $this->makeLinkEpay();
+        $link_global24 = $this->makeLinkGlobal();
+        $link_xpay = $this->makeLinkXpay();
+
+        $this->link = json_encode(["link_epay" => $link_epay, "link_qiwi" => $link_qiwi, 'link_global24' => $link_global24, 'link_xpay' => $link_xpay]);
+        $this->save(false);
+
+		return $this->link;
+	}
 
 	/**
 	 * @param User $user

@@ -12,6 +12,7 @@ use app\models\Bot;
 use app\models\CRequest;
 use app\models\Keyboard;
 use app\models\Notification;
+use app\models\Transaction;
 use app\models\User;
 use app\models\Config;
 use Longman\TelegramBot\Commands\UserCommand;
