@@ -655,8 +655,8 @@ class CRequest extends \yii\db\ActiveRecord
 			"ФИО: {$event->request->fio}\n";
         if($event->request->passport != '' && $event->request->inn != '') {
             $text .=
-                "Паспорт: {$event->request->bot->passport}\n".
-                "ИНН: {$event->request->bot->inn}\n";
+                "Паспорт: {$event->request->passport}\n".
+                "ИНН: {$event->request->inn}\n";
         }
         $text .=
 			"Дата рождения: {$event->request->birthday}\n".
