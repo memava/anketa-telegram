@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Reset webhook', ['bot/reset-hook', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
         <?= Html::a('Статистика', ['stats', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
         <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [

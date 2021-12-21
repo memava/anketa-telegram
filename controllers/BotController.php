@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -153,17 +154,18 @@ class BotController extends Controller
 
 	/**
 	 * @param $id
-	 * @return bool
+	 * @return Response
 	 * @throws NotFoundHttpException
 	 */
 	public function actionResetHook($id)
-	{
+    {
 		$bot = $this->findModel($id);
 		$bot->dropHook();
 		$bot->webhook(true);
 		sleep(8);
 		$bot->dropHook();
-		return $bot->webhook();
+        $bot->webhook();
+		return $this->redirect(["bot/view", "id" => $this->id]);
 	}
 
 	/**
