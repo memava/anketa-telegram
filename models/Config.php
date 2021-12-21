@@ -37,7 +37,9 @@ class Config extends \yii\db\ActiveRecord
 	const VAR_TEXT_STEP_ONE_ONE = "text_step_one_one";
 	const VAR_TEXT_STEP_TWO = "text_step_two";
 	const VAR_TEXT_STEP_THREE = "text_step_three";
+    const VAR_TEXT_STEP_THREE_TWO = "text_step_three_two";
 	const VAR_TEXT_STEP_FOUR = "text_step_four";
+    const VAR_TEXT_STEP_FOUR_TWO = "text_step_four_two";
 	const VAR_TEXT_STEP_FIVE = "text_step_five";
 	const VAR_TEXT_STEP_SIX = "text_step_sxi";
 	const VAR_TEXT_STEP_SEVEN = "text_step_seven";

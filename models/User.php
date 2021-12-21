@@ -470,6 +470,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 		return $a;
 	}
 
+    /**
+     * @return int
+     */
+    public function getUserCountry(){
+
+    }
+
 	/**
 	 * @return int
 	 */

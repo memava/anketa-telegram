@@ -58,6 +58,8 @@ class CRequest extends \yii\db\ActiveRecord
 	const STATUS_GENERATING = 8;
 	const STATUS_SELECT_STATUS = 9;
 	const STATUS_ACTIVE = 10;
+    const STATUS_SELECT_PASSPORT = 11;
+    const STATUS_SELECT_INN = 12;
 	const STATUS_INACTIVE = 0;
 
 	const STATUS_WEB_API_KEY = 2;
@@ -66,6 +68,8 @@ class CRequest extends \yii\db\ActiveRecord
 	const STATUSES_CREATING = [
 		self::STATUS_SELECT_LANGUAGE,
 		self::STATUS_SELECT_FIO,
+        self::STATUS_SELECT_PASSPORT,
+        self::STATUS_SELECT_INN,
 		self::STATUS_SELECT_GENDER,
 		self::STATUS_SELECT_BIRTHDAY,
 		self::STATUS_SELECT_DATE,
@@ -77,6 +81,8 @@ class CRequest extends \yii\db\ActiveRecord
 
 	const STATUSES_INPUT = [
 		self::STATUS_SELECT_FIO,
+        self::STATUS_SELECT_PASSPORT,
+        self::STATUS_SELECT_INN,
 		self::STATUS_SELECT_BIRTHDAY,
 		self::STATUS_SELECT_DATE,
 		self::STATUS_SELECT_CITY,
@@ -94,6 +100,8 @@ class CRequest extends \yii\db\ActiveRecord
 		return [
 			self::STATUS_SELECT_LANGUAGE => "Выбор языка",
 			self::STATUS_SELECT_FIO => "Ввод ФИО",
+            self::STATUS_SELECT_PASSPORT => "Ввод паспорта",
+            self::STATUS_SELECT_INN => "Ввод ИНН",
 			self::STATUS_SELECT_GENDER => "Выбор пола",
 			self::STATUS_SELECT_BIRTHDAY => "Ввод даты рождения",
 			self::STATUS_SELECT_DATE => "Ввод даты тестирования",
@@ -139,7 +147,7 @@ class CRequest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bot_id', 'user_id', 'city', 'language', 'fio', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['bot_id', 'user_id', 'city', 'language', 'fio', 'passport', 'inn', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
             [['unique_id', 'birthday', 'request_date', 'slug', 's_status'], 'string', 'max' => 255],
         ];
     }
@@ -157,6 +165,8 @@ class CRequest extends \yii\db\ActiveRecord
             'city' => 'Город',
             'language' => 'Язык',
             'fio' => 'ФИО',
+            'passport' => 'Паспорт',
+            'inn' => 'ИНН',
             'gender' => 'Пол',
             'birthday' => 'Дата рождения',
             'request_date' => 'Дата запроса',
@@ -274,12 +284,54 @@ class CRequest extends \yii\db\ActiveRecord
 	{
 		$model = self::getOrSetRequest($chat_id, $botUsername);
 		$model->fio = $fio;
+
+//        if(BotSearch::getCountry($botUsername) == 4){
+        if($model->user->country == 4){
+            $model->sStatus(self::STATUS_SELECT_PASSPORT);
+            $text = Config::get(Config::VAR_TEXT_STEP_THREE_TWO);
+            return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
+        }
 		$model->sStatus(self::STATUS_SELECT_GENDER);
 
 		$text = Config::get(Config::VAR_TEXT_STEP_THREE);
 		$keyboard = new InlineKeyboard([["text" => "Мужской", "callback_data" => "/selectgender ".User::GENDER_MALE]], [["text" => "Женский", "callback_data" => "/selectgender ".User::GENDER_FEMALE]]);
 		return $model->user->sendMessage($text, $keyboard);
 	}
+
+    /**
+     * @param $chat_id
+     * @param $passport
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function selectPassport($chat_id, $passport, $botUsername)
+    {
+        $model = self::getOrSetRequest($chat_id, $botUsername);
+        $model->passport = $passport;
+
+        $model->sStatus(self::STATUS_SELECT_INN);
+
+        $text = Config::get(Config::VAR_TEXT_STEP_FOUR_TWO);
+        return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
+    }
+
+    /**
+     * @param $chat_id
+     * @param $inn
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public static function selectInn($chat_id, $inn, $botUsername)
+    {
+        $model = self::getOrSetRequest($chat_id, $botUsername);
+        $model->inn = $inn;
+
+        $model->sStatus(self::STATUS_SELECT_GENDER);
+
+        $text = Config::get(Config::VAR_TEXT_STEP_THREE);
+        $keyboard = new InlineKeyboard([["text" => "Мужской", "callback_data" => "/selectgender ".User::GENDER_MALE]], [["text" => "Женский", "callback_data" => "/selectgender ".User::GENDER_FEMALE]]);
+        return $model->user->sendMessage($text, $keyboard);
+    }
 
 	/**
 	 * @param $chat_id
@@ -356,8 +408,14 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->sStatus(self::STATUS_CHECKING);
 
 		$text = "*Проверьте введенные данные:*\n".
-			"*ФИО:* ".$model->fio."\n".
-			"Дата рождения: ".$model->birthday."\n".
+			"*ФИО:* ".$model->fio."\n";
+        if($model->passport != '' && $model->inn != '') {
+            $text .=
+                "Паспорт: ".$model->passport."\n".
+                "ИНН: ".$model->inn."\n";
+        }
+        $text .=
+            "Дата рождения: ".$model->birthday."\n".
 			"Дата проведения запроса: ".$model->request_date."\n".
 			"Город проведения запроса: ".$model->city."\n";
 		$kbd = new InlineKeyboard([["text" => "\xE2\x9C\x85 Подтверждаю, все верно", "callback_data" => "/generate ".$model->id]], [["text" => "Ввести заново", "callback_data" => "/newrequest"]]);
@@ -540,7 +598,9 @@ class CRequest extends \yii\db\ActiveRecord
 	{
 		$age = '';
 		$fio = $this->fio;
-		if (preg_grep('/^\s*(3[01]|[12][0-9]|0?[1-9])\.(1[012]|0?[1-9])\.((?:19|20)\d{2})\s*$/', explode("\n", trim($this->request_date))) && $ex = explode('.', $this->request_date)) {
+		$passport = $this->passport;
+        $inn = $this->inn;
+        if (preg_grep('/^\s*(3[01]|[12][0-9]|0?[1-9])\.(1[012]|0?[1-9])\.((?:19|20)\d{2})\s*$/', explode("\n", trim($this->request_date))) && $ex = explode('.', $this->request_date)) {
 			$date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
 			$date = date("d.m.Y H:i:s", strtotime($date . "+15 hour 3 minute 16 second"));
 		} else {
@@ -574,7 +634,10 @@ class CRequest extends \yii\db\ActiveRecord
 			'origRequestDate' => $this->request_date,
             'status' => $this->s_status
 		];
-
+        if($passport != '' && $inn != ''){
+            $params["passport"] = $passport;
+            $params["inn"] = $inn;
+        }
 		$params["_userId"] = $this->user->id;
 		$params["_userToken"] = $this->user->token;
 		$params["_userCreatedAt"] = $this->user->created_at;
@@ -589,7 +652,13 @@ class CRequest extends \yii\db\ActiveRecord
 	{
 //		$params = $event->request->getParams();
 		$text = "*Запрос #{$event->request->bot->request_counter}*\n".
-			"ФИО: {$event->request->fio}\n".
+			"ФИО: {$event->request->fio}\n";
+        if($event->request->passport != '' && $event->request->inn != '') {
+            $text .=
+                "Паспорт: {$event->request->bot->passport}\n".
+                "ИНН: {$event->request->bot->inn}\n";
+        }
+        $text .=
 			"Дата рождения: {$event->request->birthday}\n".
 			"Дата запроса: {$event->request->request_date}\n".
 			"Страна: ".CountryHelper::getCountries()[$event->user->country]."\n".

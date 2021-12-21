@@ -109,6 +109,12 @@ class GenericmessageCommand extends UserCommand
 			case CRequest::STATUS_SELECT_FIO:
 				return CRequest::selectFio($chat_id, $text, $this->getMessage()->getBotUsername());
 				break;
+            case CRequest::STATUS_SELECT_PASSPORT:
+                return CRequest::selectPassport($chat_id, $text, $this->getMessage()->getBotUsername());
+                break;
+            case CRequest::STATUS_SELECT_INN:
+                return CRequest::selectInn($chat_id, $text, $this->getMessage()->getBotUsername());
+                break;
 			case CRequest::STATUS_SELECT_BIRTHDAY:
 				return CRequest::selectBirthday($chat_id, $text, $this->getMessage()->getBotUsername());
 				break;
