@@ -440,7 +440,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 	 */
 	public function sendMessage($text, $reply)
 	{
-        if($this->bot->token && $this->bot->name) {
+        if($this->bot && $this->bot->token && $this->bot->name) {
             $tg = new Telegram($this->bot->token, $this->bot->bot_name);
             $r = Request::sendMessage(["chat_id" => $this->token, "text" => $text, "reply_markup" => $reply, "parse_mode" => "markdown"]);
             if (Yii::$app instanceof Application) {
