@@ -220,7 +220,7 @@ class Transaction extends \yii\db\ActiveRecord
             "Email" => Config::get(Config::VAR_XPAY_EMAIL_FOR_PAYMENT),
             "PaymentSum" => $this->sum_uah * 100,
             "Transaction" => [
-                "TransactionID" => (string) $this->unique_id
+                "TransactionID" => (string) $this->unique_id . "_" . $this->sum_uah
             ],
             "PaymentInfo" => [
                 [
