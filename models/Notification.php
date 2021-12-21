@@ -195,12 +195,14 @@ class Notification extends \yii\db\ActiveRecord
     {
         if(!$users) return false;
 
-        $n = 0;
+        $n = [];
         foreach ($users as $user) {
+            if(!isset($n[$user->bot_id])) $n[$user->bot_id] = 0;
+
             $user->sendMessage($this->text, Keyboard::getMainKeyboard());
-            $n++;
-            if($n == 28) {
-                $n = 0;
+            $n[$user->bot_id]++;
+            if($n[$user->bot_id] == 28) {
+                $n[$user->bot_id] = 0;
                 sleep(1);
             }
         }
