@@ -286,7 +286,7 @@ class CRequest extends \yii\db\ActiveRecord
 		$model->fio = $fio;
 
 //        if(BotSearch::getCountry($botUsername) == 4){
-        if($model->user->country == 4){
+        if($model->user->country == CountryHelper::COUNTRY_KAZAKHSTAN){
             $model->sStatus(self::STATUS_SELECT_PASSPORT);
             $text = Config::get(Config::VAR_TEXT_STEP_THREE_TWO);
             return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
