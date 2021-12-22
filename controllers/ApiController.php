@@ -9,8 +9,10 @@ namespace app\controllers;
 use app\models\Bot;
 use app\models\Config;
 use app\models\Transaction;
+use app\models\User;
 use Longman\TelegramBot\Commands\SystemCommands\CallbackqueryCommand;
 use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Telegram;
 use yii\web\Controller;
@@ -86,6 +88,8 @@ class ApiController extends Controller
      */
     public function actionPaymentxpay()
     {
+        $u = User::findOne(45166);
+        $u->sendMessage("all okay", Keyboard::remove());
         return $this->xpay();
     }
 
