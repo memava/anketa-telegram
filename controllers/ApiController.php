@@ -78,10 +78,16 @@ class ApiController extends Controller
 			return $this->qiwi();
 		} else if($id == Bot::PAYMENT_EPAY) {
 			return $this->epay();
-		} else if($id == Bot::PAYMENT_XPAY) {
-            return $this->renderPartial($this->xpay());
-        }
+		}
 	}
+
+    /**
+     * @return false|string|void
+     */
+    public function actionPaymentxpay()
+    {
+        return $this->xpay();
+    }
 
 	/**
 	 * @return bool

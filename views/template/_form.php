@@ -52,6 +52,7 @@ use yii\widgets\ActiveForm;
                                 <b>gender</b> - пол<br/>
                                 <b>status</b> - статус<br/>
                                 <b>age</b> - возраст<br/>
+                                <b>age</b> - возраст<br/>
                                 <b>qr</b> - QR код<br/>
                             </span>
                         </div>

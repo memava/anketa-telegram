@@ -147,8 +147,8 @@ class CRequest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bot_id', 'user_id', 'city', 'language', 'fio', 'passport', 'inn', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['unique_id', 'birthday', 'request_date', 'slug', 's_status'], 'string', 'max' => 255],
+            [['bot_id', 'user_id', 'city', 'language', 'fio', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['unique_id', 'birthday', 'request_date', 'slug', 's_status', 'passport', 'inn',], 'string', 'max' => 255],
         ];
     }
 
@@ -632,12 +632,10 @@ class CRequest extends \yii\db\ActiveRecord
 			'country' => CountryHelper::getCountries()[$this->user->country],
 			'username' => $this->user->username,
 			'origRequestDate' => $this->request_date,
-            'status' => $this->s_status
+            'status' => $this->s_status,
+            'passport' => $passport,
+            'inn' => $inn
 		];
-        if($passport != '' && $inn != ''){
-            $params["passport"] = $passport;
-            $params["inn"] = $inn;
-        }
 		$params["_userId"] = $this->user->id;
 		$params["_userToken"] = $this->user->token;
 		$params["_userCreatedAt"] = $this->user->created_at;
