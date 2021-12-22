@@ -26,6 +26,8 @@ use yii\helpers\Url;
  * @property string|null $request_date
  * @property string|null $slug
  * @property string|null $s_status
+ * @property string|null $passport
+ * @property string|null $inn
  * @property int|null $status
  * @property int|null $created_at
  * @property int|null $updated_at
