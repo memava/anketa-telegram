@@ -88,8 +88,6 @@ class ApiController extends Controller
      */
     public function actionPaymentxpay()
     {
-//        $u = User::findOne(45166);
-//        $u->sendMessage(json_encode(\Yii::$app->request->get()), Keyboard::remove());
         return $this->xpay();
     }
 

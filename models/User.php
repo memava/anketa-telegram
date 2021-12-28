@@ -7,6 +7,8 @@ use app\events\UserRegisteredEvent;
 use app\helpers\CountryHelper;
 use app\helpers\KeyboardHelper;
 use Longman\TelegramBot\Entities\Factory;
+use Longman\TelegramBot\Entities\InlineKeyboard;
+use Longman\TelegramBot\Entities\InlineKeyboardButton;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Yii;
@@ -545,6 +547,31 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getUserAction()
     {
         return $this->hasMany(UserAction::class, ["user_id" => "id"]);
+    }
+
+    /**
+     * @param $buttons
+     * @return mixed
+     */
+    public function textDonate($buttons)
+    {
+        /** @var InlineKeyboard $button */
+        foreach ($buttons as $button) {
+            /** @var InlineKeyboardButton[] $kButton */
+            foreach ($button as $kButton) {
+                foreach ($kButton as $kkButton) {
+                    $uah = explode(" ", $kkButton->getCallbackData())[1];
+                    $rub = explode(" ", $kkButton->getCallbackData())[2];
+                    if($this->country == CountryHelper::COUNTRY_UKRAINE) {
+                        $cash = $uah;
+                    } else {
+                        $cash = $rub;
+                    }
+                    $kkButton->setText(str_replace("{price}", $cash . CountryHelper::getCountryCurrency($this->country), $kkButton->getText()));
+                }
+            }
+        }
+        return $buttons;
     }
 
 }

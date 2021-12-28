@@ -76,8 +76,7 @@ class BotController extends \yii\console\Controller
 
     public function actionTest()
     {
-        $t = Transaction::find()->one();
-        print_r($t->makeLinkXpay());
+
     }
 
 }

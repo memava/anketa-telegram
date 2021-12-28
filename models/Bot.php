@@ -219,7 +219,7 @@ class Bot extends \yii\db\ActiveRecord
         $user = User::findOne(["token" => $chat_id, "bot_id" => $bot]);
 		$keyboard = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $bot);
         UserAction::createInline($user->id, UserAction::TYPE_CLICK_ON_DONATE);
-        return $user->sendMessage("*Пополните балланс любым удобным способом:*", $keyboard);
+        return $user->sendMessage("*Пополните балланс любым удобным способом:*", $user->textDonate($keyboard));
 	}
 
 	/**
@@ -245,21 +245,25 @@ class Bot extends \yii\db\ActiveRecord
 			$btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard/QIWI", "url" => $link["link_qiwi"]];
 			$btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
 		} else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24) {
-            $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
+            if($user->country == CountryHelper::COUNTRY_UKRAINE)
+                $btns[][0] = ["text" => "Visa/MasterCard", "url" => $link["link_global24"]];
         } else if($user->bot->payment_system == Bot::PAYMENT_GLOBAL24_EPAY) {
-            $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_global24"]];
+            if($user->country == CountryHelper::COUNTRY_UKRAINE)
+                $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_global24"]];
             $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
         } else if($user->bot->payment_system == Bot::PAYMENT_XPAY) {
             $btns[][0] = ["text" => "Способ 1: Visa/MasterCard", "url" => $link["link_xpay"]];
         } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_GLOBAL24) {
             $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
-            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
+            if($user->country == CountryHelper::COUNTRY_UKRAINE)
+                $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_global24"]];
         } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_EPAY) {
             $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
             $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_epay"]];
         } else if($user->bot->payment_system == Bot::PAYMENT_XPAY_GLOBAL24_EPAY) {
             $btns[][0] = ["text" => "\xF0\x9F\x92\xB3 Visa/MasterCard", "url" => $link["link_xpay"]];
-            $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_global24"]];
+            if($user->country == CountryHelper::COUNTRY_UKRAINE)
+                $btns[][0] = ["text" => "Способ 2: Visa/MasterCard", "url" => $link["link_global24"]];
             $btns[][0] = ["text" => "Способ 3: Visa/MasterCard", "url" => $link["link_epay"]];
         }
 		$kbd = new InlineKeyboard(...$btns);

@@ -102,6 +102,21 @@ class CountryHelper
 		return $cl[$country];
 	}
 
+    /**
+     * @param $country
+     * @return string
+     */
+    public static function getCountryCurrency($country)
+    {
+        $cc = [
+            self::COUNTRY_UKRAINE => " грн",
+            self::COUNTRY_RUSSIA => " руб",
+            self::COUNTRY_KAZAKHSTAN => " руб",
+            self::COUNTRY_BELARUS => " руб"
+        ];
+        return $cc[$country];
+    }
+
 	/**
 	 * @param $country
 	 * @return string[]
