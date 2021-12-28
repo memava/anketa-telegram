@@ -564,8 +564,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
                 } else {
                     continue;
                 }
-                $uah = $ex[1];
-                $rub = $ex[2];
+                $uah = $ex[2];
+                $rub = $ex[1];
                 if($this->country == CountryHelper::COUNTRY_UKRAINE) {
                     $cash = $uah;
                 } else {
