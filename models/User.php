@@ -555,20 +555,23 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function textDonate($buttons)
     {
-        /** @var InlineKeyboard $button */
-        foreach ($buttons as $button) {
-            /** @var InlineKeyboardButton[] $kButton */
-            foreach ($button as $kButton) {
-                foreach ($kButton as $kkButton) {
-                    $uah = explode(" ", $kkButton->getCallbackData())[1];
-                    $rub = explode(" ", $kkButton->getCallbackData())[2];
-                    if($this->country == CountryHelper::COUNTRY_UKRAINE) {
-                        $cash = $uah;
-                    } else {
-                        $cash = $rub;
-                    }
-                    $kkButton->setText(str_replace("{price}", $cash . CountryHelper::getCountryCurrency($this->country), $kkButton->getText()));
+        /** @var InlineKeyboard $buttons */
+        foreach ($buttons->getProperty('inline_keyboard') as &$button) {
+            /** @var InlineKeyboardButton $kkButton */
+            foreach ($button as &$kkButton) {
+                if($ex = explode(" ", $kkButton->getCallbackData())) {
+                    if($ex[0] != "/donate") continue;
+                } else {
+                    continue;
                 }
+                $uah = $ex[1];
+                $rub = $ex[2];
+                if($this->country == CountryHelper::COUNTRY_UKRAINE) {
+                    $cash = $uah;
+                } else {
+                    $cash = $rub;
+                }
+                $kkButton->setText(str_replace("{price}", $cash . CountryHelper::getCountryCurrency($this->country), $kkButton->getText()));
             }
         }
         return $buttons;
