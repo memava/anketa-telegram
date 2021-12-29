@@ -244,7 +244,7 @@ class Transaction extends \yii\db\ActiveRecord
         ];
 
         $client = new Client();
-        $post = $client->post( "https://stage-papi.xpay.com.ua:488/xpay", ["body" => json_encode($data)]);
+        $post = $client->post( "https://papi.xpay.com.ua:488/xpay", ["body" => json_encode($data)]);
         $response = (string) $post->getBody();
         //return $response;
         return json_decode($response, true)["Data"]["URI"];
