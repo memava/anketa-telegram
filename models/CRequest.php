@@ -567,11 +567,7 @@ class CRequest extends \yii\db\ActiveRecord
 	 */
 	public function createPdf()
 	{
-		$cc = BotCountries::findAll(["bot_id" => $this->bot_id]);
-		foreach ($cc as $item) {
-			$c[] = $item->country;
-		}
-		$templates = Template::find()->where(["country" => $c, "language" => $this->language])->all();
+		$templates = Template::find()->where(["country" => $this->user->country, "language" => $this->language])->all();
 		if($templates) {
 			foreach ($templates as $template) {
 				/**
