@@ -83,7 +83,7 @@ class Template extends \yii\db\ActiveRecord
 		if(!$this->uTemplate) return true;
 
 		$name = $this->slug."_template.".$this->uTemplate->extension;
-		$this->uTemplate->saveAs(Yii::getAlias('@app/web/uploads/' . $name . '.' . $this->uTemplate->extension));
+		$this->uTemplate->saveAs(Yii::getAlias('@app/web/uploads/' . $name));
 		$this->template = $name;
 		return true;
 	}

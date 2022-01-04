@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'uTemplate')->widget(FileInput::classname(), [
         'options' => ['accept' => 'image/*'],
         'pluginOptions' => [
-            'initialPreview' => ($model->isNewRecord || !$model->slug) ? false : "/uploads/".$model->slug ."_template.jpg",
+            'initialPreview' => ($model->isNewRecord || !$model->slug) ? false : $model->template ? "/uploads/".$model->template :  "/uploads/".$model->slug ."_template.jpg",
             'initialPreviewAsData' => true,
             'showPreview' => true,
             'showRemove' => false,
