@@ -46,8 +46,14 @@ class ConfigController extends \yii\web\Controller
 	 */
 	public function actionIndex()
 	{
-		$models = Config::find()->all();
-		return $this->render('index', ["models" => $models]);
+        $currentCountry = \Yii::$app->request->get('country_id');
+        $models = Config::find();
+        if(!$currentCountry)
+           $models->where(['country_id' => 0]);
+        else $models->where(['country_id' => $currentCountry]);
+
+		$models = $models->all();
+		return $this->render('index', ["models" => $models, 'cc' => $currentCountry]);
 	}
 
     /**
