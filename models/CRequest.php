@@ -49,6 +49,10 @@ class CRequest extends \yii\db\ActiveRecord
 		self::LANGUAGE_EN => "Английский"
 	];
 
+    const DEFAULT_LANGUAGES = [
+        self::LANGUAGE_EN
+    ];
+
 	//const STATUS_NEW = 0;
 	const STATUS_SELECT_LANGUAGE = 1;
 	const STATUS_SELECT_FIO = 2;
