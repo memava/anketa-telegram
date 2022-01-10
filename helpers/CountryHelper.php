@@ -198,4 +198,37 @@ class CountryHelper
             self::COUNTRY_12 => "12",
 		];
 	}
+
+    /**
+     * @return int[]
+     */
+    public static function needPassport()
+    {
+        return [
+            self::COUNTRY_RUSSIA,
+            self::COUNTRY_KAZAKHSTAN,
+            self::COUNTRY_BELARUS,
+            self::COUNTRY_INDIA,
+            self::COUNTRY_SRILANKA,
+            self::COUNTRY_TURKEY,
+            self::COUNTRY_EGYPT,
+            self::COUNTRY_ISRAEL,
+            self::COUNTRY_GREECE,
+            self::COUNTRY_10,
+            self::COUNTRY_11,
+            self::COUNTRY_12,
+        ];
+    }
+
+    /**
+     * @return int[]
+     */
+    public static function needInn()
+    {
+        return [
+            self::COUNTRY_RUSSIA,
+            self::COUNTRY_KAZAKHSTAN,
+            self::COUNTRY_BELARUS,
+        ];
+    }
 }

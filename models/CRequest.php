@@ -291,8 +291,7 @@ class CRequest extends \yii\db\ActiveRecord
 		$model = self::getOrSetRequest($chat_id, $botUsername);
 		$model->fio = $fio;
 
-//        if(BotSearch::getCountry($botUsername) == 4){
-        if($model->user->country == CountryHelper::COUNTRY_KAZAKHSTAN){
+        if(in_array($model->user->country, CountryHelper::needPassport())){
             $model->sStatus(self::STATUS_SELECT_PASSPORT);
             $text = Config::get(Config::VAR_TEXT_STEP_THREE_TWO);
             return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
@@ -315,10 +314,17 @@ class CRequest extends \yii\db\ActiveRecord
         $model = self::getOrSetRequest($chat_id, $botUsername);
         $model->passport = $passport;
 
-        $model->sStatus(self::STATUS_SELECT_INN);
+        if(in_array($model->user->country, CountryHelper::needInn())){
+            $model->sStatus(self::STATUS_SELECT_INN);
+            $text = Config::get(Config::VAR_TEXT_STEP_FOUR_TWO);
+            return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
+        }
 
-        $text = Config::get(Config::VAR_TEXT_STEP_FOUR_TWO);
-        return $model->user->sendMessage($text,\Longman\TelegramBot\Entities\Keyboard::remove());
+        $model->sStatus(self::STATUS_SELECT_GENDER);
+
+        $text = Config::get(Config::VAR_TEXT_STEP_THREE);
+        $keyboard = new InlineKeyboard([["text" => "Мужской", "callback_data" => "/selectgender ".User::GENDER_MALE]], [["text" => "Женский", "callback_data" => "/selectgender ".User::GENDER_FEMALE]]);
+        return $model->user->sendMessage($text, $keyboard);
     }
 
     /**
