@@ -101,6 +101,14 @@ class Transaction extends \yii\db\ActiveRecord
 	}
 
     /**
+     * @return float|int
+     */
+    public function getAmount()
+    {
+        return abs($this->balance_after - $this->balance_before);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function attributeLabels()
@@ -226,7 +234,7 @@ class Transaction extends \yii\db\ActiveRecord
             "PaymentInfo" => [
                 [
                     "Caption" => "Назначение",
-                    "Value" => "Оплата за запросы: $this->amount шт."
+                    "Value" => "Оплата за запросы: {$this->amount} шт."
                 ]
             ]
         ];
@@ -304,13 +312,6 @@ class Transaction extends \yii\db\ActiveRecord
 		}
 	}
 
-	/**
-	 * @return float|int
-	 */
-	public function getAmount()
-	{
-		return abs($this->balance_after - $this->balance_before);
-	}
 
 	/**
 	 * @return bool
