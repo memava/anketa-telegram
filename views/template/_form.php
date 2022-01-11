@@ -52,13 +52,14 @@ use yii\widgets\ActiveForm;
                                 <b>gender</b> - пол<br/>
                                 <b>status</b> - статус<br/>
                                 <b>age</b> - возраст<br/>
-                                <b>age</b> - возраст<br/>
+                                <b>passport</b> - паспорт<br/>
+                                <b>inn</b> - ИНН<br/>
                                 <b>qr</b> - QR код<br/>
                             </span>
                         </div>
                         <div class="col-sm-6">
                             <span>
-                                Шаблон заполнения (параметров может быть сколько угодно, но каждый с новой строки, шрифт - default, bold, cour):<br/>
+                                Шаблон заполнения (параметров может быть сколько угодно, но каждый с новой строки, шрифт - default, bold, cour, courb, tnr, tnrb):<br/>
                                 <b>параметр:Х:Y:font:size</b><br/>
                                 <b>параметр:Х:Y:font:size</b><br/>
                                 <b>параметр1,параметр2,свой текст:Х:Y:font:size</b><br/>

@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\CountryHelper;
 use app\models\Bot;
 use kartik\file\FileInput;
 use yii\helpers\Html;
@@ -46,8 +47,8 @@ use yii\widgets\ActiveForm;
     ])  ?>
 	<?= $form->field($model, 'reserve_bot')->textInput() ?>
 
-    <?php foreach (\app\helpers\CountryHelper::getCountries() as $k => $country) {
-        echo $form->field($model, 'country_'.$k)->checkbox(['label' => $country]);
+    <?php foreach (CountryHelper::getCountries() as $k => $country) {
+        echo $form->field($model, 'country['.$k.']')->checkbox(['label' => $country]);
     }?>
 
     <div class="form-group">

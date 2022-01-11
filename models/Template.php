@@ -32,6 +32,9 @@ class Template extends \yii\db\ActiveRecord
 	const FONT_DEFAULT = 'default';
 	const FONT_BOLD = 'bold';
 	const FONT_COUR = 'cour';
+	const FONT_COUR_BOLD = 'courb';
+	const FONT_TNR = 'tnr';
+	const FONT_TNR_BOLD = 'tnrb';
 
 	const QUALITY_IMAGE = 80;
 	const QUALITY_PDF = 60;
@@ -131,9 +134,6 @@ class Template extends \yii\db\ActiveRecord
 	{
         $tpl = file_exists(Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg")) ? Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg") : Yii::getAlias("@app/web/uploads/" . $this->template);
 		$template = $tpl;
-		$font_default = Yii::getAlias("@app/web/css/font_1.ttf");
-		$font_bold = Yii::getAlias("@app/web/css/font_1_bold.ttf");
-		$font_cour = Yii::getAlias("@app/web/css/cour.ttf");
 
 		$image = new \claviska\SimpleImage();
 		$image->fromFile($template);
@@ -166,13 +166,8 @@ class Template extends \yii\db\ActiveRecord
 			$params["_template"] = $this->id;
 		}
 		foreach ($this->parseData() as $data) {
-			$f = $data["font"];
-            switch ($f) {
-                case self::FONT_DEFAULT: $f = $font_default; break;
-                case self::FONT_BOLD: $f = $font_bold; break;
-                case self::FONT_COUR: $f = $font_cour; break;
-                default: $f = $font_default;
-            }
+            $f = $this->getFontPath($data["font"]);
+
 			if($data["param"] == 'qr') {
 				$writer = new PngWriter();
 				$qr = QrCode::create($this->shortUrl($this->getFullLink()."?d=".$this->makeQrData($params)))
@@ -237,6 +232,23 @@ class Template extends \yii\db\ActiveRecord
 		}
 		return true;
 	}
+
+    /**
+     * @param $font
+     * @return false|string
+     */
+    private function getFontPath($font)
+    {
+        switch ($font) {
+            case self::FONT_DEFAULT: return Yii::getAlias("@app/web/css/font_1.ttf");
+            case self::FONT_BOLD: return Yii::getAlias("@app/web/css/font_1_bold.ttf");
+            case self::FONT_COUR: return Yii::getAlias("@app/web/css/cour.ttf");
+            case self::FONT_COUR_BOLD: return Yii::getAlias("@app/web/css/couriernewbold.ttf");
+            case self::FONT_TNR: return Yii::getAlias("@app/web/css/tnr.ttf");
+            case self::FONT_TNR_BOLD: return Yii::getAlias("@app/web/css/tnrb.ttf");
+            default: return Yii::getAlias("@app/web/css/font_1.ttf");
+        }
+    }
 
 	/**
 	 * @return string

@@ -39,6 +39,8 @@ use yii\web\UploadedFile;
  * @property string $custom_description
  * @property string $image
  *
+ * @property array $country
+ *
  * @property UploadedFile $uImage
  *
  * @property-read int $needRefsForRequest
@@ -58,10 +60,6 @@ use yii\web\UploadedFile;
  * @property-read string $reserveLink
  * @property-read mixed $todayRef
  * @property-read mixed $allRef
- * @property bool $country_1
- * @property bool $country_2
- * @property bool $country_3
- * @property bool $country_4
  *
  * @property-read BotCountries[] $countries
  * @property-read Notification[] $notifications
@@ -116,8 +114,8 @@ class Bot extends \yii\db\ActiveRecord
             [['requests_for_ref'], 'number'],
             [['name', 'bot_name','image'], 'string', 'max' => 255],
             [['message_after_request_if_no_requests','custom_description'],'string'],
-			[['country_1', 'country_2', 'country_3', 'country_4'], 'boolean'],
             [['uImage'],'file'],
+            [["country"], "safe"]
         ];
     }
 
@@ -297,81 +295,44 @@ class Bot extends \yii\db\ActiveRecord
 		return (bool) $this->requests_for_ref;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function getCountry_1()
-	{
-		return (bool) BotCountries::findOne(["country" => 1, "bot_id" => $this->id]);
-	}
+    /**
+     * @return array
+     */
+    public function getCountry()
+    {
+        $arr = [];
+        $countries = BotCountries::find()->where(["bot_id" => $this->id])->indexBy('country')->asArray()->all();
+        foreach ($countries as $k => $country) {
+            $arr[$k] = true;
+        }
+        return $arr;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getCountry_2()
-	{
-		return (bool) BotCountries::findOne(["country" => 2, "bot_id" => $this->id]);
-	}
+    /**
+     * @param $v
+     * @throws \yii\db\StaleObjectException
+     */
+    public function setCountry($v)
+    {
+        foreach ($v as $country => $value) {
+            if($value) {
+                $bc = new BotCountries();
+                $bc->bot_id = $this->id;
+                $bc->country = $country;
+                $bc->save();
+            } else {
+                $c = BotCountries::findOne(["country" => $country, "bot_id" => $this->id]);
+                if($c) $c->delete();
+            }
+        }
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getCountry_3()
-	{
-		return (bool) BotCountries::findOne(["country" => 3, "bot_id" => $this->id]);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function getCountry_4()
-	{
-		return (bool) BotCountries::findOne(["country" => 4, "bot_id" => $this->id]);
-	}
-
-	/**
-	 * @param $v
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
-	 */
-	public function setCountry_1($v)
-	{
-		if($v) {
-			$bc = new BotCountries();
-			$bc->bot_id = $this->id;
-			$bc->country = 1;
-			$bc->save();
-		} else {
-			if($bc = BotCountries::findOne(['bot_id' => $this->id, 'country' => 1])) {
-				$bc->delete();
-			}
-		}
-	}
-
-	/**
-	 * @param $v
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
-	 */
-	public function setCountry_2($v)
-	{
-		if($v) {
-			$bc = new BotCountries();
-			$bc->bot_id = $this->id;
-			$bc->country = 2;
-			$bc->save();
-		} else {
-			if($bc = BotCountries::findOne(['bot_id' => $this->id, 'country' => 2])) {
-				$bc->delete();
-			}
-		}
-	}
-
-
-    public function getAllRef(){
-
+    /**
+     * @return bool|int|string|null
+     */
+    public function getAllRef()
+    {
         return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->count();
-
     }
 
 	/**
@@ -379,47 +340,10 @@ class Bot extends \yii\db\ActiveRecord
 	 * @throws \Throwable
 	 * @throws \yii\db\StaleObjectException
 	 */
-	
-	
-    public function getTodayRef(){
-
+    public function getTodayRef()
+    {
         return   User::find()->where(['bot_id' => $this->id])->andWhere((['not',['ref_id'=>null]]))->andWhere([">", "created_at", strtotime("today", time())])->count();
-
     }
-	
-	
-	public function setCountry_3($v)
-	{
-		if($v) {
-			$bc = new BotCountries();
-			$bc->bot_id = $this->id;
-			$bc->country = 3;
-			$bc->save();
-		} else {
-			if($bc = BotCountries::findOne(['bot_id' => $this->id, 'country' => 3])) {
-				$bc->delete();
-			}
-		}
-	}
-
-	/**
-	 * @param $v
-	 * @throws \Throwable
-	 * @throws \yii\db\StaleObjectException
-	 */
-	public function setCountry_4($v)
-	{
-		if($v) {
-			$bc = new BotCountries();
-			$bc->bot_id = $this->id;
-			$bc->country = 4;
-			$bc->save();
-		} else {
-			if($bc = BotCountries::findOne(['bot_id' => $this->id, 'country' => 4])) {
-				$bc->delete();
-			}
-		}
-	}
 
 	/**
 	 * @param $role
@@ -618,7 +542,7 @@ class Bot extends \yii\db\ActiveRecord
         if(User::findIdentityByAccessToken($chat_id, $botUsername)) {
             $bot = Bot::findByBotname($botUsername);
             $user = User::findIdentityByAccessToken($chat_id, $botUsername);
-            $user->country = self::getCountry($botUsername);
+            $user->country = self::getOneCountry($botUsername);
             if($user->available_requests == 0 && !CRequest::isRequests($user->id)) $user->available_requests = $bot->free_requests;
             $user->save(false);
             return Request::emptyResponse();
@@ -677,7 +601,7 @@ class Bot extends \yii\db\ActiveRecord
      * @params $botUsername
      * @return \yii\db\ActiveQuery
      */
-    public static function getCountry($botUsername){
+    public static function getOneCountry($botUsername){
         $bot = Bot::findByBotname($botUsername);
         return BotCountries::find()->where(['bot_id' => $bot->id])->one()->country;
     }
@@ -699,10 +623,6 @@ class Bot extends \yii\db\ActiveRecord
 	{
 		$isNewRecord = $this->isNewRecord;
 		if(parent::save($runValidation, $attributeNames)) {
-            $this->setCountry_1($this->country_1);
-            $this->setCountry_2($this->country_2);
-            $this->setCountry_3($this->country_3);
-            $this->setCountry_4($this->country_4);
             if($isNewRecord) {
 				return $this->webhook();
 			}
