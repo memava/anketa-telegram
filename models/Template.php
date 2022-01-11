@@ -31,6 +31,7 @@ class Template extends \yii\db\ActiveRecord
 {
 	const FONT_DEFAULT = 'default';
 	const FONT_BOLD = 'bold';
+	const FONT_COUR = 'cour';
 
 	const QUALITY_IMAGE = 80;
 	const QUALITY_PDF = 60;
@@ -132,6 +133,7 @@ class Template extends \yii\db\ActiveRecord
 		$template = $tpl;
 		$font_default = Yii::getAlias("@app/web/css/font_1.ttf");
 		$font_bold = Yii::getAlias("@app/web/css/font_1_bold.ttf");
+		$font_cour = Yii::getAlias("@app/web/css/cour.ttf");
 
 		$image = new \claviska\SimpleImage();
 		$image->fromFile($template);
@@ -164,7 +166,13 @@ class Template extends \yii\db\ActiveRecord
 			$params["_template"] = $this->id;
 		}
 		foreach ($this->parseData() as $data) {
-			$f = $data["font"] == self::FONT_DEFAULT ? $font_default : $font_bold;
+			$f = $data["font"];
+            switch ($f) {
+                case self::FONT_DEFAULT: $f = $font_default; break;
+                case self::FONT_BOLD: $f = $font_bold; break;
+                case self::FONT_COUR: $f = $font_cour; break;
+                default: $f = $font_default;
+            }
 			if($data["param"] == 'qr') {
 				$writer = new PngWriter();
 				$qr = QrCode::create($this->shortUrl($this->getFullLink()."?d=".$this->makeQrData($params)))

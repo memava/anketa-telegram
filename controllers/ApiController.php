@@ -137,6 +137,7 @@ class ApiController extends Controller
             if(isset($data["txn_id_own"]) && $data["txn_id_own"]) {
                 $ex = explode("_", $data["txn_id_own"]);
                 $transaction = Transaction::findOne(["unique_id" => $ex[0]]);
+                $transaction->payment_system = Bot::PAYMENT_XPAY;
                 $transaction->accept();
                 $data_to_return = [
                     "txn_id" => (string) $data["txn_id"],
