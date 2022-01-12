@@ -230,9 +230,9 @@ class CRequest extends \yii\db\ActiveRecord
 			$user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
 
 			$message = str_replace("{link}", $user->getRefLink(), $user->bot->message_after_request_if_no_requests);
-			$message = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $message);
+			//$message = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $message);
 
-			return $user->sendMessage(123, $user->textDonate($kbd));
+			return $user->sendMessage($message, $user->textDonate($kbd));
 		}
 
 		$model = self::getOrSetRequest($chat_id, $botUsername);
