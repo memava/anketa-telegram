@@ -229,8 +229,8 @@ class CRequest extends \yii\db\ActiveRecord
 			$kbd = Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $user->bot->id);
 			$user->sendMessage($text, \Longman\TelegramBot\Entities\Keyboard::remove());
 
-			$message = str_replace("{link}", $user->getRefLink(), $user->bot->message_after_request_if_no_requests);
-			//$message = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $message);
+			$message = str_replace("{link}", $user->getRefLink(), $user->bot->message_after_request_if_no_requests ?: Config::get(Config::VAR_DEFAULT_LINK_TEXT));
+			$message = str_replace(explode(" ", "* _ { } +"), ["\*", "\_", "\{", "\}", "\+"], $message);
 
 			return $user->sendMessage($message, $user->textDonate($kbd));
 		}
