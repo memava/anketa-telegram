@@ -682,8 +682,7 @@ class CRequest extends \yii\db\ActiveRecord
 			$event->user->sendMessage(Config::get(Config::VAR_TEXT_NO_TEMPLATES), Keyboard::getMainKeyboard());
 		}
 
-		$event->user->sendMessage(Config::get(Config::VAR_TEXT_DONATE), \Longman\TelegramBot\Entities\Keyboard::remove());
-		$event->user->sendMessage(Config::get(Config::VAR_TEXT_DONATE), $event->user->textDonate(Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $event->user->bot->id)));
+		$event->user->sendMessage(123, $event->user->textDonate(Keyboard::getKeyboardFor(Keyboard::TYPE_DONATE, $event->user->bot->id)));
 
 		if($event->request->bot->message_after_request_if_no_requests) {
 			$message = str_replace("{link}", $event->user->getRefLink(), $event->user->bot->message_after_request_if_no_requests);
