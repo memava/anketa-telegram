@@ -41,43 +41,43 @@ class Template extends \yii\db\ActiveRecord
 
 	public $uTemplate;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'template';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'template';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['country', 'language'], 'integer'],
-            [['data'], 'string'],
-            [['name', 'slug', 'domain', 'template'], 'string', 'max' => 255],
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['country', 'language'], 'integer'],
+			[['data'], 'string'],
+			[['name', 'slug', 'domain', 'template'], 'string', 'max' => 255],
 			["uTemplate", "file"]
-        ];
-    }
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'country' => 'Страна',
-            'name' => 'Название',
-            'slug' => 'Название для документа',
-            'domain' => 'Домен',
-            'template' => 'Шаблон',
-            'data' => 'Data',
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'country' => 'Страна',
+			'name' => 'Название',
+			'slug' => 'Название для документа',
+			'domain' => 'Домен',
+			'template' => 'Шаблон',
+			'data' => 'Data',
 			'language' => "Язык"
-        ];
-    }
+		];
+	}
 
 	/**
 	 * @return bool
@@ -115,7 +115,7 @@ class Template extends \yii\db\ActiveRecord
 						"y" => (int) $y,
 						"font" => $font,
 						"size" => (int) $size,
-                        "params" => array_slice($d, 5)
+						"params" => array_slice($d, 5)
 					];
 				}
 				return $params;
@@ -132,7 +132,7 @@ class Template extends \yii\db\ActiveRecord
 	 */
 	public function createPdf($id, $toScreen = false, $params = [])
 	{
-        $tpl = file_exists(Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg")) ? Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg") : Yii::getAlias("@app/web/uploads/" . $this->template);
+		$tpl = file_exists(Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg")) ? Yii::getAlias("@app/web/uploads/" . $this->slug . "_template.jpg") : Yii::getAlias("@app/web/uploads/" . $this->template);
 		$template = $tpl;
 
 		$image = new \claviska\SimpleImage();
@@ -151,22 +151,22 @@ class Template extends \yii\db\ActiveRecord
 				$request->city = "Кривой Рог";
 				$request->slug = rand(100000000, 999999999);
 				$request->gender = 0;
-                $request->passport = "TT123123FF";
-                $request->inn = "A54235";
-                $request->language = 1;
-                $request->s_status = 0;
+				$request->passport = "TT123123FF";
+				$request->inn = "A54235";
+				$request->language = 1;
+				$request->s_status = 0;
 			}
 
 			if(!$toScreen) {
 				$filename = $this->slug . $request->unique_id;
 			}
 
-            $params = $request->getParams();
+			$params = $request->getParams();
 
 			$params["_template"] = $this->id;
 		}
 		foreach ($this->parseData() as $data) {
-            $f = $this->getFontPath($data["font"]);
+			$f = $this->getFontPath($data["font"]);
 
 			if($data["param"] == 'qr') {
 				$writer = new PngWriter();
@@ -178,7 +178,7 @@ class Template extends \yii\db\ActiveRecord
 				$image->overlay($res->getDataUri(), "top left", 1, $data["x"], $data["y"]);
 			} else {
 				if(isset($params[$data["param"]])) {
-                    $text = $data["params"] ? $data["params"][$params[$data["param"]]] : $params[$data["param"]];
+					$text = $data["params"] ? $data["params"][$params[$data["param"]]] : $params[$data["param"]];
 					$image->text($text, [
 						"anchor" => "top left",
 						"size" => $data["size"],
@@ -191,8 +191,8 @@ class Template extends \yii\db\ActiveRecord
 					foreach ($ex as $item) {
 						//$item = trim($item);
 						if(isset($params[trim($item)])) {
-                            $text = $data["params"] ? $data["params"][$params[$item]] : $params[$item];
-                            $string .= $text;
+							$text = $data["params"] ? $data["params"][$params[$item]] : $params[$item];
+							$string .= $text;
 						} else {
 							$string .= $item;
 						}
@@ -233,36 +233,36 @@ class Template extends \yii\db\ActiveRecord
 		return true;
 	}
 
-    /**
-     * @param $font
-     * @return false|string
-     */
-    private function getFontPath($font)
-    {
-        switch ($font) {
-            case self::FONT_DEFAULT: return Yii::getAlias("@app/web/css/font_1.ttf");
-            case self::FONT_BOLD: return Yii::getAlias("@app/web/css/font_1_bold.ttf");
-            case self::FONT_COUR: return Yii::getAlias("@app/web/css/cour.ttf");
-            case self::FONT_COUR_BOLD: return Yii::getAlias("@app/web/css/couriernewbold.ttf");
-            case self::FONT_TNR: return Yii::getAlias("@app/web/css/tnr.ttf");
-            case self::FONT_TNR_BOLD: return Yii::getAlias("@app/web/css/tnrb.ttf");
-            default: return Yii::getAlias("@app/web/css/font_1.ttf");
-        }
-    }
+	/**
+	 * @param $font
+	 * @return false|string
+	 */
+	private function getFontPath($font)
+	{
+		switch ($font) {
+			case self::FONT_DEFAULT: return Yii::getAlias("@app/web/css/font_1.ttf");
+			case self::FONT_BOLD: return Yii::getAlias("@app/web/css/font_1_bold.ttf");
+			case self::FONT_COUR: return Yii::getAlias("@app/web/css/cour.ttf");
+			case self::FONT_COUR_BOLD: return Yii::getAlias("@app/web/css/couriernewbold.ttf");
+			case self::FONT_TNR: return Yii::getAlias("@app/web/css/tnr.ttf");
+			case self::FONT_TNR_BOLD: return Yii::getAlias("@app/web/css/tnrb.ttf");
+			default: return Yii::getAlias("@app/web/css/font_1.ttf");
+		}
+	}
 
 	/**
 	 * @return string
 	 */
 	public function getFullLink()
 	{
-	    $ex = explode(".", Yii::$app->request->hostName);
-	    $domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
+		$ex = explode(".", Yii::$app->request->hostName);
+		$domain = $ex[count($ex)-2] . "." . $ex[count($ex)-1];
 
-	    if($this->domain) {
-	        return "https://".$this->domain . "." . $domain . "/";
-        } else {
-	        return "https://".Yii::$app->request->hostName . "/template/qr/";
-        }
+		if($this->domain) {
+			return "https://".$this->domain . "." . $domain . "/";
+		} else {
+			return "https://".Yii::$app->request->hostName . "/template/qr/";
+		}
 	}
 
 	/**
@@ -272,7 +272,8 @@ class Template extends \yii\db\ActiveRecord
 	public function makeQrData($data)
 	{
 		$encoded = json_encode($data);
-		$encoded = Yii::$app->security->encryptByKey($encoded, md5($data["_userId"].$data["_userToken"].$data["_userCreatedAt"]));
+		$encoded = Yii::$app->security->encryptByKey($encoded, Config::get(Config::VAR_ENCRYPT_KEY));
+//		$encoded = Yii::$app->security->encryptByKey($encoded, md5($data["_userId"].$data["_userToken"].$data["_userCreatedAt"]));
 		return StringHelper::base64UrlEncode($encoded);
 	}
 
@@ -303,34 +304,35 @@ class Template extends \yii\db\ActiveRecord
 		return $server_output["data"]["short_url"];
 	}
 
-    /**
-     * @param $d
-     * @return string
-     * @throws \ImagickException
-     */
+	/**
+	 * @param $d
+	 * @return string
+	 * @throws \ImagickException
+	 */
 	public static function qr($d)
-    {
-        $d = StringHelper::base64UrlDecode($d);
-        $user = current(array_filter(User::find()->asArray()->all(), function ($v) use ($d){
-            $h = md5($v["id"].$v["token"].$v["created_at"]);
-            if(\Yii::$app->security->decryptByKey($d, $h)) {
-                return true;
-            }
-            return false;
-        }));
-        $data = \Yii::$app->security->decryptByKey($d, md5($user["id"].$user["token"].$user["created_at"]));
+	{
+		$d = StringHelper::base64UrlDecode($d);
+		$data = Yii::$app->security->decryptByKey($d, Config::get(Config::VAR_ENCRYPT_KEY));
+		if(!$data) return "ERROR";
 
-        if($data) {
-            $data = json_decode($data, 1);
-            $template = Template::findOne($data["_template"]);
+		$user = User::findOne($data["_userId"]);
 
-            if ($template) {
-                $template->createPdf(0, true, $data);
-            } else {
-                return "ERROR";
-            }
-        }
-        return '';
-    }
+		if(!$user) return "ERROR";
+
+		if(md5($user->id.$user->token.$user->created_at) != md5($data["_userId"].$data["_userToken"].$data["_userCreatedAt"])) {
+			return "ERROR";
+		}
+
+		$data = json_decode($data, 1);
+		$template = Template::findOne($data["_template"]);
+
+		if ($template) {
+			$template->createPdf(0, true, $data);
+		} else {
+			return "ERROR";
+		}
+
+		return '';
+	}
 
 }
