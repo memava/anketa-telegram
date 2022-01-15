@@ -313,14 +313,14 @@ class Template extends \yii\db\ActiveRecord
 	{
 		$d = StringHelper::base64UrlDecode($d);
 		$data = Yii::$app->security->decryptByKey($d, Config::get(Config::VAR_ENCRYPT_KEY));
-		if(!$data) return "ERROR";
+		if(!$data) return "ERROR1";
 
 		$user = User::findOne($data["_userId"]);
 
-		if(!$user) return "ERROR";
+		if(!$user) return "ERROR2";
 
 		if(md5($user->id.$user->token.$user->created_at) != md5($data["_userId"].$data["_userToken"].$data["_userCreatedAt"])) {
-			return "ERROR";
+			return "ERROR3";
 		}
 
 		$data = json_decode($data, 1);
@@ -329,7 +329,7 @@ class Template extends \yii\db\ActiveRecord
 		if ($template) {
 			$template->createPdf(0, true, $data);
 		} else {
-			return "ERROR";
+			return "ERROR4";
 		}
 
 		return '';
