@@ -71,6 +71,8 @@ class Config extends \yii\db\ActiveRecord
     const VAR_XPAY_PARTNER_TOKEN = "xpay_partner_token";
     const VAR_XPAY_EMAIL_FOR_PAYMENT = "xpay_email_for_payment";
 
+	const VAR_ENCRYPT_KEY = "encrypt_key";
+
     //const VAR_DEFAULT_START_TEXT = "default_start_text";
 
     public $uFile;
