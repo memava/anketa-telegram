@@ -314,6 +314,7 @@ class Template extends \yii\db\ActiveRecord
 		$d = StringHelper::base64UrlDecode($d);
 		$data = Yii::$app->security->decryptByKey($d, Config::get(Config::VAR_ENCRYPT_KEY));
 		if(!$data) return "ERROR1";
+		$data = json_decode($data, true);
 
 		$user = User::findOne($data["_userId"]);
 
