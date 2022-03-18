@@ -58,7 +58,7 @@ class CountryHelper
             self::COUNTRY_EGYPT => "Egypt",
             self::COUNTRY_ISRAEL => "Israel",
             self::COUNTRY_GREECE => "Greece",
-            self::COUNTRY_10 => "10",
+            self::COUNTRY_10 => "Moldova",
             self::COUNTRY_11 => "11",
             self::COUNTRY_12 => "12",
 		];
@@ -193,7 +193,7 @@ class CountryHelper
             self::COUNTRY_EGYPT => "EG",
             self::COUNTRY_ISRAEL => "IL",
             self::COUNTRY_GREECE => "GR",
-            self::COUNTRY_10 => "10",
+            self::COUNTRY_10 => "MD",
             self::COUNTRY_11 => "11",
             self::COUNTRY_12 => "12",
 		];
