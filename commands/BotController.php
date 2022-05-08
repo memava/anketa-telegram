@@ -79,4 +79,25 @@ class BotController extends \yii\console\Controller
 
     }
 
+    public function actionGenerateLanguages(){
+        $models = Config::find()->all();
+        $countries = CountryHelper::getCountries();
+        foreach ($models as $model){
+            if(strpos($model->variable, 'text_') !== false){
+                foreach ($countries as $cid => $country){
+                    if($cid == 2){
+                        $model->country_id = $cid;
+                        $model->save();
+                    } else {
+                        $newModel = new Config();
+                        $data = $model->attributes;
+                        $newModel->setAttributes($data);
+                        $newModel->country_id = $cid;
+                        $newModel->save();
+                    }
+                }
+            }
+        }
+    }
+
 }

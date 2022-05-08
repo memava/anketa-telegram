@@ -92,9 +92,14 @@ class Config extends \yii\db\ActiveRecord
     {
         return [
             [['value', 'comment'], 'string'],
-            [['variable', 'file'], 'string', 'max' => 255],
+            [['variable'], 'string', 'max' => 255],
             ["uFile", "file"]
         ];
+    }
+
+    public static function primaryKey()
+    {
+        return ["variable", "country_id"];
     }
 
     /**
